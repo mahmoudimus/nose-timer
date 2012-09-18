@@ -70,7 +70,7 @@ class TimerPlugin(Plugin):
             return
         d = sorted(self._timed_tests.iteritems(), key=operator.itemgetter(1))
         for test, time_taken in d:
-            stream.writeln("%s: %0.4f" % (test, time_taken))
+            stream.writeln("%s: %0.4fs" % (test, time_taken))
 
     def _register_time(self, test):
         self._timed_tests[test.id()] = self._timeTaken()
