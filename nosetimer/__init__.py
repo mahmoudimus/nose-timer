@@ -1,1 +1,1 @@
-from plugin import TimerPlugin
+from nosetimer.plugin import TimerPlugin
