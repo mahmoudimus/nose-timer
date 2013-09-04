@@ -88,8 +88,9 @@ class TimerPlugin(Plugin):
                           dest="timer_top_n", help=_help)
 
         parser.add_option("--timer-ok", action="store", default=1,
-                          dest="timer_ok", help="Normal execution time")
+                          dest="timer_ok",
+                          help="Normal execution time in seconds")
 
         parser.add_option("--timer-warning", action="store", default=3,
                           dest="timer_warning",
-                          help="Warning about execution time")
+                          help="Warning about execution time in seconds")
