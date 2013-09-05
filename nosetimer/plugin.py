@@ -88,7 +88,8 @@ class TimerPlugin(Plugin):
                           dest="timer_top_n", help=_help)
 
         _ok_help = ("Normal execution time in seconds."
-                    "Such test will be highlight green"
+                    "Such test will be highlight green")
+
         parser.add_option("--timer-ok", action="store", default=1,
                           dest="timer_ok",
                           help=_ok_help)
