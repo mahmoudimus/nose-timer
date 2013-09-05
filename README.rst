@@ -20,4 +20,4 @@ Run nosetests with the ``--with-timer`` flag, and you will see a list of the tes
 
 To show only N slowest tests run nosetests with ``--timer-top-n`` flag.
 
-You can highlight slower tests using ``--timer-ok`` and ``--timer-warning`` flags. Tests which takes less time than ``--timer-ok`` will be highlited green, less than ``--timer-warning`` - yellow, other tests will be red.
+You can highlight slower tests using ``--timer-ok`` and ``--timer-warning`` flags. Tests which takes less time than ``--timer-ok`` will be highlighted green, less than ``--timer-warning`` - yellow, other tests will be red.
