@@ -87,9 +87,17 @@ class TimerPlugin(Plugin):
         parser.add_option("--timer-top-n", action="store", default="-1",
                           dest="timer_top_n", help=_help)
 
+        _ok_help = ("Normal execution time in seconds."
+                    "Such test will be highlight green")
+
         parser.add_option("--timer-ok", action="store", default=1,
-                          dest="timer_ok", help="Normal execution time")
+                          dest="timer_ok",
+                          help=_ok_help)
+
+        _warning_help = ("Warning about execution time in seconds to "
+                         "highlight slow tests yellow. Tests which takes "
+                         "more time will be highlighted red")
 
         parser.add_option("--timer-warning", action="store", default=3,
                           dest="timer_warning",
-                          help="Warning about execution time")
+                          help=_warning_help)
