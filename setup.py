@@ -7,25 +7,25 @@ from setuptools import setup
 setup(
     name='nose-timer',
     version='0.1.3',
-    description=u'A timer plugin for nosetests',
+    description='A timer plugin for nosetests',
     long_description=open('README.rst').read(),
-    author = u'Juan Pedro Fisanotti',
-    author_email = 'fisadev@gmail.com',
+    author='Juan Pedro Fisanotti',
+    author_email='fisadev@gmail.com',
     url='https://github.com/fisadev/nose-timer',
     packages=['nosetimer', ],
     license='LICENSE.txt',
-    entry_points = '''
+    entry_points='''
         [nose.plugins.0.10]
         nosetimer = nosetimer:TimerPlugin
     ''',
-    classifiers = [
+    classifiers=[
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3',
         'Topic :: Software Development :: Testing',
         'Environment :: Console',
     ],
