@@ -20,8 +20,26 @@ pip-log.txt
 .coverage
 .tox
 
-#Translations
+# Translations
 *.mo
 
-#Mr Developer
+# Mr Developer
 .mr.developer.cfg
+
+# pydev
+.project
+.pydevproject
+
+# emacs
+\#*
+.\#*
+.dir-locals.el
+
+# vim
+.*.swp
+*~
+.*.sw*
+
+# intellij/pycharm
+.idea/
+*.iml
