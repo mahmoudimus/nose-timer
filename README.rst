@@ -44,6 +44,18 @@ You can highlight slower tests using ``--timer-ok`` and ``--timer-warning`` flag
 - All other tests will be highlighted red.
 
 
+How do I increase timer verbosity?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By default nose-timer outputs test times at the end of all tests.
+You can output test times after each test with ``--timer-verbose`` flag.
+Note that ``--vv`` should be enabled as well to view info logs.
+
+.. code:: bash
+
+    nosetests --with-timer --timer-verbose -vv .
+
+
 License
 -------
 
@@ -73,4 +85,5 @@ Contributors
 - `@andresriancho <https://github.com/andresriancho>`_
 - `@e0ne <https://github.com/e0ne>`_
 - `@kevinburke <https://github.com/kevinburke>`_
+- `@DmitrySandalov <https://github.com/DmitrySandalov>`_
 
