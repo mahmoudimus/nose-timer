@@ -1,8 +1,11 @@
 import operator
 import os
 from time import time
+import logging
 
 from nose.plugins.base import Plugin
+
+log = logging.getLogger('nose.plugin.timer')
 
 
 class TimerPlugin(Plugin):
@@ -37,11 +40,16 @@ class TimerPlugin(Plugin):
         self.timer_top_n = int(options.timer_top_n)
         self.timer_ok = int(options.timer_ok)
         self.timer_warning = int(options.timer_warning)
+        self.timer_verbose = options.timer_verbose
         self._timed_tests = {}
 
     def startTest(self, test):
         """Initializes a timer before starting a test."""
         self._timer = time()
+
+    def afterTest(self, test):
+        if self.timer_verbose:
+            log.info(self._timed_tests[test.id()])
 
     def report(self, stream):
         """Report the test times"""
@@ -101,3 +109,8 @@ class TimerPlugin(Plugin):
         parser.add_option("--timer-warning", action="store", default=3,
                           dest="timer_warning",
                           help=_warning_help)
+
+        _verbose_help = ("Print execution time after each test.")
+
+        parser.add_option("--timer-verbose", action="store_true",
+                          dest="timer_verbose", help=_verbose_help)
