@@ -9,7 +9,7 @@ class TestTimerPlugin(unittest.TestCase):
         plugin = nosetimer.TimerPlugin()
         parser = mock.MagicMock()
         plugin.addOptions(parser)
-        self.assertEquals(parser.add_option.call_count, 4)
+        self.assertEquals(parser.add_option.call_count, 5)
 
     def test_configure(self):
         attributes = ['config', 'timer_top_n', 'timer_ok',
