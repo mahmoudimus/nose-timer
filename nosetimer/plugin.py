@@ -48,7 +48,7 @@ class TimerPlugin(Plugin):
         if not self.enabled:
             return
 
-        d = sorted(self._timed_tests.iteritems(),
+        d = sorted(self._timed_tests.items(),
                    key=operator.itemgetter(1),
                    reverse=True)
 
