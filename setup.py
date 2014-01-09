@@ -15,6 +15,7 @@ setup(
         u'Andres Riancho',
         u'Ivan Kolodyazhny',
         u'Kevin Burke',
+        u'Carlos de la Torre',
     ]),
     url='https://github.com/mahmoudimus/nose-timer',
     packages=['nosetimer', ],

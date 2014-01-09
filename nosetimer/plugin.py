@@ -38,8 +38,8 @@ class TimerPlugin(Plugin):
         super(TimerPlugin, self).configure(options, config)
         self.config = config
         self.timer_top_n = int(options.timer_top_n)
-        self.timer_ok = int(options.timer_ok)
-        self.timer_warning = int(options.timer_warning)
+        self.timer_ok = float(options.timer_ok)
+        self.timer_warning = float(options.timer_warning)
         self.timer_verbose = options.timer_verbose
         self._timed_tests = {}
 
