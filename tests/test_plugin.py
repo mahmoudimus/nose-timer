@@ -31,3 +31,19 @@ class TestTimerPlugin(unittest.TestCase):
         plugin.startTest(None)
         self.assertTrue(hasattr(plugin, '_timer'))
         self.assertNotEquals(plugin._timeTaken(), 0.0)
+
+    def test_configure_accepts_a_float_for_timer_ok(self):
+        plugin = nosetimer.TimerPlugin()
+        mock_opts = mock.MagicMock(timer_ok='0.5')
+        try:
+            plugin.configure(mock_opts, None)
+        except ValueError:
+            self.fail("configure() raised ValueError unexpectedly!")
+
+    def test_configure_accepts_a_float_for_timer_warning(self):
+        plugin = nosetimer.TimerPlugin()
+        mock_opts = mock.MagicMock(timer_warning='0.5')
+        try:
+            plugin.configure(mock_opts, None)
+        except ValueError:
+            self.fail("configure() raised ValueError unexpectedly!")
