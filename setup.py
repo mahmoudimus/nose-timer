@@ -21,6 +21,7 @@ setup(
     ]),
     url='https://github.com/mahmoudimus/nose-timer',
     packages=['nosetimer', ],
+    install_requires=['termcolor', ],
     license='LICENSE',
     entry_points='''
         [nose.plugins.0.10]
