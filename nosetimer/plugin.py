@@ -48,8 +48,13 @@ class TimerPlugin(Plugin):
         self._timer = time()
 
     def afterTest(self, test):
+        """Called after the test has been run and the result recorded (after
+        stopTest)."""
         if self.timer_verbose:
-            log.info(self._timed_tests[test.id()])
+            try:
+                log.info(self._timed_tests[test.id()])
+            except KeyError:
+                pass
 
     def report(self, stream):
         """Report the test times"""
