@@ -89,22 +89,22 @@ class TimerPlugin(Plugin):
     def addOptions(self, parser, env=os.environ):
         super(TimerPlugin, self).addOptions(parser, env)
 
-        _help = ("When the timer plugin is enabled, only show the N tests"
-                 " that consume more time. The default, -1, shows all tests.")
+        _help = ("When the timer plugin is enabled, only show the N tests "
+                 "that consume more time. The default, -1, shows all tests.")
 
         parser.add_option("--timer-top-n", action="store", default="-1",
                           dest="timer_top_n", help=_help)
 
-        _ok_help = ("Normal execution time in seconds."
-                    "Such test will be highlight green")
+        _ok_help = ("Normal execution time in seconds. Such test will be "
+                    "highlight in green.")
 
         parser.add_option("--timer-ok", action="store", default=1,
                           dest="timer_ok",
                           help=_ok_help)
 
         _warning_help = ("Warning about execution time in seconds to "
-                         "highlight slow tests yellow. Tests which takes "
-                         "more time will be highlighted red")
+                         "highlight slow tests in yellow. Tests which take "
+                         "more time will be highlighted in red.")
 
         parser.add_option("--timer-warning", action="store", default=3,
                           dest="timer_warning",
