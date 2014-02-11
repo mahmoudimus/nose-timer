@@ -86,4 +86,4 @@ Contributors
 - `@e0ne <https://github.com/e0ne>`_
 - `@kevinburke <https://github.com/kevinburke>`_
 - `@DmitrySandalov <https://github.com/DmitrySandalov>`_
-
+- `@skudriashev <https://github.com/skudriashev>`_
