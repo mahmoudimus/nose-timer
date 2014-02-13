@@ -38,6 +38,7 @@ How do I color the output and have pretty colors?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can highlight slower tests using ``--timer-ok`` and ``--timer-warning`` flags.
+Default time unit is the second, but you can specify it explicitly, e.g. 1s, 100ms.
 
 - Tests which takes less time than ``--timer-ok`` will be highlighted green.
 - Tests which takes less time than ``--timer-warning`` will be highlighted yellow.
