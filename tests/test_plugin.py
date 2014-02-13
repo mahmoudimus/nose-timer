@@ -2,6 +2,7 @@ import mock
 import unittest
 
 import nosetimer
+from nose_parameterized import parameterized
 
 
 class TestTimerPlugin(unittest.TestCase):
@@ -31,3 +32,30 @@ class TestTimerPlugin(unittest.TestCase):
         plugin.startTest(None)
         self.assertTrue(hasattr(plugin, '_timer'))
         self.assertNotEquals(plugin._timeTaken(), 0.0)
+
+    @parameterized.expand([
+        ('1', 1000),  # seconds by default
+        ('2s', 2000),  # seconds
+        ('500ms', 500),  # miliseconds
+    ])
+    def test_parse_time(self, value, expected_ms):
+        plugin = nosetimer.TimerPlugin()
+        self.assertEqual(plugin._parse_time(value), expected_ms)
+
+    def test_parse_time_error(self):
+        plugin = nosetimer.TimerPlugin()
+        self.assertRaises(ValueError, plugin._parse_time, '5seconds')
+
+    @parameterized.expand([
+        'timer_ok',
+        'timer_warning',
+    ])
+    def test_parse_time_called(self, option):
+        plugin = nosetimer.TimerPlugin()
+        time = '100ms'
+        with mock.patch.object(plugin, '_parse_time') as parse:
+            parse.return_value = time
+            mock_opts = mock.MagicMock(**{option: time})
+            plugin.configure(mock_opts, None)
+            self.assertEqual(getattr(plugin, option), time)
+            parse.assert_any_call(time)

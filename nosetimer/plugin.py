@@ -1,3 +1,4 @@
+import re
 import operator
 import os
 from time import time
@@ -23,6 +24,8 @@ class TimerPlugin(Plugin):
         'default': '\033[0m'
     }
 
+    time_format = re.compile(r'^(?P<time>\d+)(?P<units>s|ms)?$')
+
     def _timeTaken(self):
         if hasattr(self, '_timer'):
             taken = time() - self._timer
@@ -33,13 +36,31 @@ class TimerPlugin(Plugin):
             taken = 0.0
         return taken
 
+    def _parse_time(self, value):
+        """Parse string time representation to get number of miliseconds.
+        Raises ValueError for invalid format
+        """
+        try:
+            # Default time unit is second, we should convert it to miliseconds
+            return int(value) * 1000
+        except ValueError:
+            # Try to parse if we are unlucky to cast value into int
+            m = self.time_format.match(value)
+            if not m:
+                raise ValueError("Could not parse time represented by "
+                                 "'{t}'".format(t=value))
+            time = int(m.group('time'))
+            if m.group('units') != 'ms':
+                time *= 1000
+            return time
+
     def configure(self, options, config):
         """Configures the test timer plugin."""
         super(TimerPlugin, self).configure(options, config)
         self.config = config
         self.timer_top_n = int(options.timer_top_n)
-        self.timer_ok = int(options.timer_ok)
-        self.timer_warning = int(options.timer_warning)
+        self.timer_ok = self._parse_time(options.timer_ok)
+        self.timer_warning = self._parse_time(options.timer_warning)
         self.timer_verbose = options.timer_verbose
         self._timed_tests = {}
 
@@ -65,9 +86,12 @@ class TimerPlugin(Plugin):
                 stream.writeln(self._format_report(test, time_taken))
 
     def _format_report(self, test, time_taken):
-        if time_taken <= self.timer_ok:
+        # Time taken is stores as seconds, we should convert it to miliseconds
+        # to be able to compare with timer settings.
+        taken_ms = time_taken * 1000
+        if taken_ms <= self.timer_ok:
             color = "default"
-        elif time_taken <= self.timer_warning:
+        elif taken_ms <= self.timer_warning:
             color = "warning"
         else:
             color = "error"
@@ -95,16 +119,20 @@ class TimerPlugin(Plugin):
         parser.add_option("--timer-top-n", action="store", default="-1",
                           dest="timer_top_n", help=_help)
 
-        _ok_help = ("Normal execution time in seconds."
-                    "Such test will be highlight green")
+        _time_unit_help = "Default time unit is a second, but you can set " \
+                          "it explicitly (e.g. 1s, 500ms)."
+
+        _ok_help = ("Normal execution time. Such test will be highlight "
+                    "green. {units}".format(units=_time_unit_help))
 
         parser.add_option("--timer-ok", action="store", default=1,
                           dest="timer_ok",
                           help=_ok_help)
 
-        _warning_help = ("Warning about execution time in seconds to "
-                         "highlight slow tests yellow. Tests which takes "
-                         "more time will be highlighted red")
+        _warning_help = ("Warning about execution time to highlight slow "
+                         "tests yellow. Tests which takes more time will be "
+                         "highlighted red. {units}".format(
+                             units=_time_unit_help))
 
         parser.add_option("--timer-warning", action="store", default=3,
                           dest="timer_warning",
