@@ -37,11 +37,11 @@ class TimerPlugin(Plugin):
         return taken
 
     def _parse_time(self, value):
-        """Parse string time representation to get number of miliseconds.
+        """Parse string time representation to get number of milliseconds.
         Raises ValueError for invalid format
         """
         try:
-            # Default time unit is second, we should convert it to miliseconds
+            # Default time unit is second, we should convert it to milliseconds
             return int(value) * 1000
         except ValueError:
             # Try to parse if we are unlucky to cast value into int
@@ -86,7 +86,7 @@ class TimerPlugin(Plugin):
                 stream.writeln(self._format_report(test, time_taken))
 
     def _format_report(self, test, time_taken):
-        # Time taken is stores as seconds, we should convert it to miliseconds
+        # Time taken is stores as seconds, we should convert it to milliseconds
         # to be able to compare with timer settings.
         taken_ms = time_taken * 1000
         if taken_ms <= self.timer_ok:

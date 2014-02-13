@@ -36,7 +36,7 @@ class TestTimerPlugin(unittest.TestCase):
     @parameterized.expand([
         ('1', 1000),  # seconds by default
         ('2s', 2000),  # seconds
-        ('500ms', 500),  # miliseconds
+        ('500ms', 500),  # milliseconds
     ])
     def test_parse_time(self, value, expected_ms):
         plugin = nosetimer.TimerPlugin()
