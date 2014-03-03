@@ -6,6 +6,5 @@ env:
   - TOXENV=py33
 install:
   - pip install tox
-  - pip install mock
 script:
   - tox
