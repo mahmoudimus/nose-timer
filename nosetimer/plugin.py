@@ -10,9 +10,7 @@ log = logging.getLogger('nose.plugin.timer')
 
 
 class TimerPlugin(Plugin):
-    """This plugin provides test timings
-
-    """
+    """This plugin provides test timings."""
 
     name = 'timer'
     score = 1
@@ -69,11 +67,16 @@ class TimerPlugin(Plugin):
         self._timer = time()
 
     def afterTest(self, test):
+        """Called after the test has been run and the result recorded (after
+        stopTest)."""
         if self.timer_verbose:
-            log.info(self._timed_tests[test.id()])
+            try:
+                log.info(self._timed_tests[test.id()])
+            except KeyError:
+                pass
 
     def report(self, stream):
-        """Report the test times"""
+        """Report the test times."""
         if not self.enabled:
             return
 
@@ -102,19 +105,25 @@ class TimerPlugin(Plugin):
         self._timed_tests[test.id()] = self._timeTaken()
 
     def addError(self, test, err, capt=None):
+        """Called when a test raises an uncaught exception."""
         self._register_time(test)
 
     def addFailure(self, test, err, capt=None, tb_info=None):
+        """Called when a test fails."""
         self._register_time(test)
 
     def addSuccess(self, test, capt=None):
+        """Called when a test passes."""
         self._register_time(test)
 
     def addOptions(self, parser, env=os.environ):
+        """Called to allow plugin to register command-line options with the
+        parser.
+        """
         super(TimerPlugin, self).addOptions(parser, env)
 
-        _help = ("When the timer plugin is enabled, only show the N tests"
-                 " that consume more time. The default, -1, shows all tests.")
+        _help = ("When the timer plugin is enabled, only show the N tests "
+                 "that consume more time. The default, -1, shows all tests.")
 
         parser.add_option("--timer-top-n", action="store", default="-1",
                           dest="timer_top_n", help=_help)
@@ -130,8 +139,8 @@ class TimerPlugin(Plugin):
                           help=_ok_help)
 
         _warning_help = ("Warning about execution time to highlight slow "
-                         "tests yellow. Tests which takes more time will be "
-                         "highlighted red. {units}".format(
+                         "tests in yellow. Tests which take more time will "
+                         "be highlighted red. {units}".format(
                              units=_time_unit_help))
 
         parser.add_option("--timer-warning", action="store", default=3,

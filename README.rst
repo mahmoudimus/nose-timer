@@ -3,6 +3,10 @@ nose-timer
 
 A timer plugin for nosetests that answers the question: *how much time does every test takes?*
 
+.. image:: https://travis-ci.org/mahmoudimus/nose-timer.png?branch=master
+   :target: https://travis-ci.org/mahmoudimus/nose-timer
+
+
 Install
 -------
 
@@ -88,4 +92,4 @@ Contributors
 - `@kevinburke <https://github.com/kevinburke>`_
 - `@DmitrySandalov <https://github.com/DmitrySandalov>`_
 - `@satyrius <https://github.com/satyrius>`_
-
+- `@skudriashev <https://github.com/skudriashev>`_
