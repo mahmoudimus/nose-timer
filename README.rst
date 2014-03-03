@@ -3,7 +3,7 @@ nose-timer
 
 A timer plugin for nosetests that answers the question: *how much time does every test takes?*
 
-.. image:: https://travis-ci.org/mahmoudimus/nose-timer.png?branch=master   
+.. image:: https://travis-ci.org/mahmoudimus/nose-timer.png?branch=master
    :target: https://travis-ci.org/mahmoudimus/nose-timer
 
 
@@ -42,6 +42,7 @@ How do I color the output and have pretty colors?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can highlight slower tests using ``--timer-ok`` and ``--timer-warning`` flags.
+Default time unit is the second, but you can specify it explicitly, e.g. 1s, 100ms.
 
 - Tests which takes less time than ``--timer-ok`` will be highlighted green.
 - Tests which takes less time than ``--timer-warning`` will be highlighted yellow.
@@ -90,4 +91,5 @@ Contributors
 - `@e0ne <https://github.com/e0ne>`_
 - `@kevinburke <https://github.com/kevinburke>`_
 - `@DmitrySandalov <https://github.com/DmitrySandalov>`_
+- `@satyrius <https://github.com/satyrius>`_
 - `@skudriashev <https://github.com/skudriashev>`_
