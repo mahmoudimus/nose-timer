@@ -9,9 +9,7 @@ log = logging.getLogger('nose.plugin.timer')
 
 
 class TimerPlugin(Plugin):
-    """This plugin provides test timings
-
-    """
+    """This plugin provides test timings."""
 
     name = 'timer'
     score = 1
@@ -57,7 +55,7 @@ class TimerPlugin(Plugin):
                 pass
 
     def report(self, stream):
-        """Report the test times"""
+        """Report the test times."""
         if not self.enabled:
             return
 
@@ -83,15 +81,21 @@ class TimerPlugin(Plugin):
         self._timed_tests[test.id()] = self._timeTaken()
 
     def addError(self, test, err, capt=None):
+        """Called when a test raises an uncaught exception."""
         self._register_time(test)
 
     def addFailure(self, test, err, capt=None, tb_info=None):
+        """Called when a test fails."""
         self._register_time(test)
 
     def addSuccess(self, test, capt=None):
+        """Called when a test passes."""
         self._register_time(test)
 
     def addOptions(self, parser, env=os.environ):
+        """Called to allow plugin to register command-line options with the
+        parser.
+        """
         super(TimerPlugin, self).addOptions(parser, env)
 
         _help = ("When the timer plugin is enabled, only show the N tests "
