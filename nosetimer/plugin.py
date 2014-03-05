@@ -1,8 +1,9 @@
-import re
+import logging
 import operator
 import os
-from time import time
-import logging
+import re
+import termcolor
+import time
 
 from nose.plugins.base import Plugin
 
@@ -15,18 +16,11 @@ class TimerPlugin(Plugin):
     name = 'timer'
     score = 1
 
-    COLORS = {
-        'ok': '\033[92m',
-        'warning': '\033[93m',
-        'error': '\033[91m',
-        'default': '\033[0m'
-    }
-
     time_format = re.compile(r'^(?P<time>\d+)(?P<units>s|ms)?$')
 
     def _timeTaken(self):
         if hasattr(self, '_timer'):
-            taken = time() - self._timer
+            taken = time.time() - self._timer
         else:
             # test died before it ran (probably error in setup())
             # or success/failure added before test started probably
@@ -64,7 +58,7 @@ class TimerPlugin(Plugin):
 
     def startTest(self, test):
         """Initializes a timer before starting a test."""
-        self._timer = time()
+        self._timer = time.time()
 
     def afterTest(self, test):
         """Called after the test has been run and the result recorded (after
@@ -93,13 +87,12 @@ class TimerPlugin(Plugin):
         # to be able to compare with timer settings.
         taken_ms = time_taken * 1000
         if taken_ms <= self.timer_ok:
-            color = "default"
+            color = 'green'
         elif taken_ms <= self.timer_warning:
-            color = "warning"
+            color = 'yellow'
         else:
-            color = "error"
-        return "%s%s: %0.4fs%s" % \
-            (self.COLORS[color], test, time_taken, self.COLORS["default"])
+            color = 'red'
+        return termcolor.colored("%s: %0.4fs" % (test, time_taken), color)
 
     def _register_time(self, test):
         self._timed_tests[test.id()] = self._timeTaken()
