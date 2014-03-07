@@ -109,11 +109,9 @@ class TimerPlugin(Plugin):
         """Called when a test passes."""
         self._register_time(test)
 
-    def addOptions(self, parser, env=os.environ):
-        """Called to allow plugin to register command-line options with the
-        parser.
-        """
-        super(TimerPlugin, self).addOptions(parser, env)
+    def options(self, parser, env=os.environ):
+        """Register commandline options."""
+        super(TimerPlugin, self).options(parser, env)
 
         _help = ("When the timer plugin is enabled, only show the N tests "
                  "that consume more time. The default, -1, shows all tests.")
@@ -121,11 +119,11 @@ class TimerPlugin(Plugin):
         parser.add_option("--timer-top-n", action="store", default="-1",
                           dest="timer_top_n", help=_help)
 
-        _time_unit_help = "Default time unit is a second, but you can set " \
-                          "it explicitly (e.g. 1s, 500ms)."
+        _time_units_help = ("Default time unit is a second, but you can set "
+                            "it explicitly (e.g. 1s, 500ms).")
 
-        _ok_help = ("Normal execution time. Such test will be highlight "
-                    "green. {units}".format(units=_time_unit_help))
+        _ok_help = ("Normal execution time. Such tests will be highlighted in "
+                    "green. {units_help}".format(units_help=_time_units_help))
 
         parser.add_option("--timer-ok", action="store", default=1,
                           dest="timer_ok",
@@ -133,8 +131,8 @@ class TimerPlugin(Plugin):
 
         _warning_help = ("Warning about execution time to highlight slow "
                          "tests in yellow. Tests which take more time will "
-                         "be highlighted red. {units}".format(
-                             units=_time_unit_help))
+                         "be highlighted in red. {units_help}".format(
+                             units_help=_time_units_help))
 
         parser.add_option("--timer-warning", action="store", default=3,
                           dest="timer_warning",

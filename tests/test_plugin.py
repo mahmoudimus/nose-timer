@@ -14,9 +14,9 @@ class TestTimerPlugin(unittest.TestCase):
         self.test_mock.id.return_value = 1
         self.opts_mock = mock.MagicMock(name='opts')
 
-    def test_addOptions(self):
+    def test_options(self):
         parser = mock.MagicMock()
-        self.plugin.addOptions(parser)
+        self.plugin.options(parser)
         self.assertEquals(parser.add_option.call_count, 5)
 
     def test_configure(self):
