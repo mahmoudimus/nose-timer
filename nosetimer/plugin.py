@@ -30,7 +30,7 @@ class TimerPlugin(Plugin):
 
     def _parse_time(self, value):
         """Parse string time representation to get number of milliseconds.
-        Raises ValueError for invalid format
+        Raises the ``ValueError`` for invalid format.
         """
         try:
             # Default time unit is second, we should convert it to milliseconds
@@ -83,8 +83,8 @@ class TimerPlugin(Plugin):
                 stream.writeln(self._format_report(test, time_taken))
 
     def _format_report(self, test, time_taken):
-        # Time taken is stores as seconds, we should convert it to milliseconds
-        # to be able to compare with timer settings.
+        # The time_taken is stored in seconds, so we need to convert it to
+        # milliseconds to be able to compare with timer settings.
         taken_ms = time_taken * 1000
         if taken_ms <= self.timer_ok:
             color = 'green'
@@ -92,7 +92,8 @@ class TimerPlugin(Plugin):
             color = 'yellow'
         else:
             color = 'red'
-        return termcolor.colored("%s: %0.4fs" % (test, time_taken), color)
+        return termcolor.colored("{0}: {1:0.4f}s".format(test, time_taken),
+                                 color)
 
     def _register_time(self, test):
         self._timed_tests[test.id()] = self._timeTaken()
