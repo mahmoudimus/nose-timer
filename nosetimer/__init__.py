@@ -1,1 +1,1 @@
-from nosetimer.plugin import TimerPlugin
+from nosetimer.plugin import TimerPlugin    # noqa
