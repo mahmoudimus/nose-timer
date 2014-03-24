@@ -2,10 +2,11 @@ import logging
 import operator
 import os
 import re
-import termcolor
 import time
 
-from nose.plugins.base import Plugin
+from nose.plugins import Plugin
+from nosetimer import runner as n_runner
+from nosetimer import utils
 
 log = logging.getLogger('nose.plugin.timer')
 
@@ -51,23 +52,13 @@ class TimerPlugin(Plugin):
         super(TimerPlugin, self).configure(options, config)
         self.config = config
         self.timer_top_n = int(options.timer_top_n)
-        self.timer_ok = self._parse_time(options.timer_ok)
-        self.timer_warning = self._parse_time(options.timer_warning)
-        self.timer_verbose = options.timer_verbose
+        options.timer_ok = self._parse_time(options.timer_ok)
+        options.timer_warning = self._parse_time(options.timer_warning)
         self._timed_tests = {}
 
     def startTest(self, test):
         """Initializes a timer before starting a test."""
         self._timer = time.time()
-
-    def afterTest(self, test):
-        """Called after the test has been run and the result recorded (after
-        stopTest)."""
-        if self.timer_verbose:
-            try:
-                log.info(self._timed_tests[test.id()])
-            except KeyError:
-                pass
 
     def report(self, stream):
         """Report the test times."""
@@ -83,17 +74,9 @@ class TimerPlugin(Plugin):
                 stream.writeln(self._format_report(test, time_taken))
 
     def _format_report(self, test, time_taken):
-        # The time_taken is stored in seconds, so we need to convert it to
-        # milliseconds to be able to compare with timer settings.
-        taken_ms = time_taken * 1000
-        if taken_ms <= self.timer_ok:
-            color = 'green'
-        elif taken_ms <= self.timer_warning:
-            color = 'yellow'
-        else:
-            color = 'red'
-        return termcolor.colored("{0}: {1:0.4f}s".format(test, time_taken),
-                                 color)
+        """Format a single report line."""
+        return "{0}: {1}".format(
+            test, utils.colored_time(time_taken, self.config.options))
 
     def _register_time(self, test):
         self._timed_tests[test.id()] = self._timeTaken()
@@ -109,6 +92,13 @@ class TimerPlugin(Plugin):
     def addSuccess(self, test, capt=None):
         """Called when a test passes."""
         self._register_time(test)
+
+    def prepareTestRunner(self, runner):
+        """Called before tests are run."""
+        return n_runner.TimerTestRunner(self._timed_tests,
+                                        stream=runner.stream,
+                                        verbosity=runner.verbosity,
+                                        config=runner.config)
 
     def options(self, parser, env=os.environ):
         """Register commandline options."""
@@ -138,8 +128,3 @@ class TimerPlugin(Plugin):
         parser.add_option("--timer-warning", action="store", default=3,
                           dest="timer_warning",
                           help=_warning_help)
-
-        _verbose_help = ("Print execution time after each test.")
-
-        parser.add_option("--timer-verbose", action="store_true",
-                          dest="timer_verbose", help=_verbose_help)
