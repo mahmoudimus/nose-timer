@@ -10,4 +10,4 @@ def colored_time(time_taken, options):
         color = 'yellow'
     else:
         color = 'red'
-    return termcolor.colored("{0:0.4f}s".format(time_taken_ms), color)
+    return termcolor.colored("{0:0.4f}s".format(time_taken), color)

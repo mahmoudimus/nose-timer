@@ -30,7 +30,7 @@ tests and the time spent by each one (in seconds):
 How do I show only the ``n`` slowest tests?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For example, to show only the **10** slowest tests, run nosetests with
+For example, to show only the **10** slowest tests, run nosetests with the
 ``--timer-top-n`` flag.
 
 .. code:: bash
@@ -46,19 +46,7 @@ Default time unit is the second, but you can specify it explicitly, e.g. 1s, 100
 
 - Tests which take less time than ``--timer-ok`` will be highlighted in green.
 - Tests which take less time than ``--timer-warning`` will be highlighted in yellow.
-- All other tests will be highlighted red.
-
-
-How do I increase timer verbosity?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-By default nose-timer outputs test times at the end of all tests.
-You can output test times after each test with ``--timer-verbose`` flag.
-Note that ``--vv`` should be enabled as well to view info logs.
-
-.. code:: bash
-
-    nosetests --with-timer --timer-verbose -vv .
+- All other tests will be highlighted in red.
 
 
 License
