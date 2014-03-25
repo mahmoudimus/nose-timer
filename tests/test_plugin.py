@@ -2,6 +2,7 @@ import mock
 import unittest
 
 import nosetimer
+
 from nose_parameterized import parameterized
 
 
@@ -17,11 +18,10 @@ class TestTimerPlugin(unittest.TestCase):
     def test_options(self):
         parser = mock.MagicMock()
         self.plugin.options(parser)
-        self.assertEquals(parser.add_option.call_count, 5)
+        self.assertEquals(parser.add_option.call_count, 4)
 
     def test_configure(self):
-        attributes = ('config', 'timer_top_n', 'timer_ok',
-                      'timer_warning', '_timed_tests')
+        attributes = ('config', 'timer_top_n', '_timed_tests')
         for attr in attributes:
             self.assertFalse(hasattr(self.plugin, attr))
 
@@ -54,15 +54,9 @@ class TestTimerPlugin(unittest.TestCase):
     ])
     def test_parse_time_called(self, option):
         time = '100ms'
-        with mock.patch.object(self.plugin, '_parse_time') as parse:
-            parse.return_value = time
+        with mock.patch.object(self.plugin, '_parse_time') as parse_time:
+            parse_time.return_value = time
             mock_opts = mock.MagicMock(**{option: time})
             self.plugin.configure(mock_opts, None)
-            self.assertEqual(getattr(self.plugin, option), time)
-            parse.assert_any_call(time)
-
-    def test_afterTest(self):
-        self.opts_mock.timer_verbose.return_value = True
-        self.plugin.configure(self.opts_mock, None)
-        # make sure there is no exception if test time result was not found
-        self.plugin.afterTest(self.test_mock)
+            self.assertEqual(getattr(mock_opts, option), time)
+            parse_time.has_call(time)
