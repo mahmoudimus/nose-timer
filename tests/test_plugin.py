@@ -1,8 +1,7 @@
 import mock
 import unittest
 
-import nosetimer
-
+from nosetimer import plugin
 from nose_parameterized import parameterized
 
 
@@ -10,7 +9,7 @@ class TestTimerPlugin(unittest.TestCase):
 
     def setUp(self):
         super(TestTimerPlugin, self).setUp()
-        self.plugin = nosetimer.TimerPlugin()
+        self.plugin = plugin.TimerPlugin()
         self.test_mock = mock.MagicMock(name='test')
         self.test_mock.id.return_value = 1
         self.opts_mock = mock.MagicMock(name='opts')

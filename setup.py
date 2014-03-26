@@ -23,10 +23,11 @@ setup(
     packages=['nosetimer', ],
     install_requires=['termcolor', ],
     license='LICENSE',
-    entry_points='''
-        [nose.plugins.0.10]
-        nosetimer = nosetimer:TimerPlugin
-    ''',
+    entry_points={
+        'nose.plugins.0.10': [
+            'nosetimer = nosetimer.plugin:TimerPlugin',
+        ]
+    },
     classifiers=[
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
