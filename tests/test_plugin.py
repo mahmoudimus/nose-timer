@@ -10,6 +10,9 @@ class TestTimerPlugin(unittest.TestCase):
     def setUp(self):
         super(TestTimerPlugin, self).setUp()
         self.plugin = plugin.TimerPlugin()
+        self.plugin.enabled = True
+        self.plugin.timer_ok = 1000
+        self.plugin.timer_warning = 2000
         self.test_mock = mock.MagicMock(name='test')
         self.test_mock.id.return_value = 1
         self.opts_mock = mock.MagicMock(name='opts')
@@ -20,7 +23,7 @@ class TestTimerPlugin(unittest.TestCase):
         self.assertEquals(parser.add_option.call_count, 4)
 
     def test_configure(self):
-        attributes = ('config', 'timer_top_n', '_timed_tests')
+        attributes = ('config', 'timer_top_n')
         for attr in attributes:
             self.assertFalse(hasattr(self.plugin, attr))
 
@@ -59,3 +62,15 @@ class TestTimerPlugin(unittest.TestCase):
             self.plugin.configure(mock_opts, None)
             self.assertEqual(getattr(mock_opts, option), time)
             parse_time.has_call(time)
+
+    @parameterized.expand([
+        (0.0001, '0.0001s', 'green'),
+        (1,      '1.0000s', 'green'),
+        (1.0001, '1.0001s', 'yellow'),
+        (2.00,   '2.0000s', 'yellow'),
+        (2.0001, '2.0001s', 'red'),
+    ])
+    @mock.patch("nosetimer.plugin.termcolor.colored")
+    def test_colored_time(self, time_taken, expected, color, colored_mock):
+        self.plugin._colored_time(time_taken)
+        colored_mock.assert_called_once_with(expected, color)
