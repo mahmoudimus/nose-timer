@@ -13,6 +13,7 @@ class TestTimerPlugin(unittest.TestCase):
         self.plugin.enabled = True
         self.plugin.timer_ok = 1000
         self.plugin.timer_warning = 2000
+        self.plugin.timer_no_color = False
         self.test_mock = mock.MagicMock(name='test')
         self.test_mock.id.return_value = 1
         self.opts_mock = mock.MagicMock(name='opts')
@@ -20,7 +21,7 @@ class TestTimerPlugin(unittest.TestCase):
     def test_options(self):
         parser = mock.MagicMock()
         self.plugin.options(parser)
-        self.assertEquals(parser.add_option.call_count, 4)
+        self.assertEquals(parser.add_option.call_count, 5)
 
     def test_configure(self):
         attributes = ('config', 'timer_top_n')
@@ -74,3 +75,9 @@ class TestTimerPlugin(unittest.TestCase):
     def test_colored_time(self, time_taken, expected, color, colored_mock):
         self.plugin._colored_time(time_taken)
         colored_mock.assert_called_once_with(expected, color)
+
+    def test_no_color_option(self):
+        with mock.patch("nosetimer.plugin.termcolor.colored") as colored_mock:
+            self.plugin.timer_no_color = True
+            self.plugin._colored_time(1)
+            self.assertFalse(colored_mock.called)

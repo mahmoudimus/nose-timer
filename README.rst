@@ -49,6 +49,13 @@ Default time unit is the second, but you can specify it explicitly, e.g. 1s, 100
 - All other tests will be highlighted in red.
 
 
+How do I turn off pretty colors?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In some cases, you may want to disable colors completely. This is done by using the
+``--timer-no-colors`` flag. This is useful when running tests in a headless console.
+
+
 License
 -------
 
@@ -81,3 +88,4 @@ Contributors
 - `@DmitrySandalov <https://github.com/DmitrySandalov>`_
 - `@satyrius <https://github.com/satyrius>`_
 - `@skudriashev <https://github.com/skudriashev>`_
+- `@whodafly <https://github.com/whodafly>`_
