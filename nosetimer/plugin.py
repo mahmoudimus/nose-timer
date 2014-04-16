@@ -56,6 +56,7 @@ class TimerPlugin(Plugin):
             self.timer_top_n = int(options.timer_top_n)
             self.timer_ok = self._parse_time(options.timer_ok)
             self.timer_warning = self._parse_time(options.timer_warning)
+            self.timer_use_color = not options.timer_no_color
 
     def startTest(self, test):
         """Initializes a timer before starting a test."""
@@ -74,6 +75,9 @@ class TimerPlugin(Plugin):
             if i < self.timer_top_n or self.timer_top_n == -1:
                 stream.writeln(self._format_report(test, time_taken))
 
+    def _format_time(self, time_taken):
+        return "{0:0.4f}s".format(time_taken)
+
     def _colored_time(self, time_taken):
         time_taken_ms = time_taken * 1000
         if time_taken_ms <= self.timer_ok:
@@ -82,11 +86,14 @@ class TimerPlugin(Plugin):
             color = 'yellow'
         else:
             color = 'red'
-        return termcolor.colored("{0:0.4f}s".format(time_taken), color)
+        return termcolor.colored(self._format_time(time_taken), color)
 
     def _format_report(self, test, time_taken):
         """Format a single report line."""
-        return "{0}: {1}".format(test, self._colored_time(time_taken))
+        if self.timer_use_color:
+            return "{0}: {1}".format(test, self._colored_time(time_taken))
+        else:
+            return "{0}: {1}".format(test, self._format_time(time_taken))
 
     def _register_time(self, test):
         self._timed_tests[test.id()] = self._timeTaken()
@@ -111,7 +118,11 @@ class TimerPlugin(Plugin):
                 output = 'ok'
                 time_taken = self._timed_tests.get(test.id())
                 if time_taken is not None:
-                    output += ' ({0})'.format(self._colored_time(time_taken))
+                    if self.timer_use_color:
+                        time_taken = self._colored_time(time_taken)
+                    else:
+                        time_taken = self._format_time(time_taken)
+                    output += ' ({0})'.format(time_taken)
                 result.stream.writeln(output)
             elif result.dots:
                 result.stream.write('.')
@@ -149,3 +160,8 @@ class TimerPlugin(Plugin):
         parser.add_option("--timer-warning", action="store", default=3,
                           dest="timer_warning",
                           help=_warning_help)
+
+        _no_color_help = "Don't colorize output (useful for non-tty output)"
+
+        parser.add_option("--timer-no-color", action="store_true", default=False,
+                          dest="timer_no_color", help=_no_color_help)

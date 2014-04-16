@@ -20,7 +20,7 @@ class TestTimerPlugin(unittest.TestCase):
     def test_options(self):
         parser = mock.MagicMock()
         self.plugin.options(parser)
-        self.assertEquals(parser.add_option.call_count, 4)
+        self.assertEquals(parser.add_option.call_count, 5)
 
     def test_configure(self):
         attributes = ('config', 'timer_top_n')
@@ -74,3 +74,13 @@ class TestTimerPlugin(unittest.TestCase):
     def test_colored_time(self, time_taken, expected, color, colored_mock):
         self.plugin._colored_time(time_taken)
         colored_mock.assert_called_once_with(expected, color)
+
+    @parameterized.expand([
+        (0.0001, '0.0001s'),
+        (1,      '1.0000s'),
+        (1.0001, '1.0001s'),
+        (2.00,   '2.0000s'),
+        (2.0001, '2.0001s'),
+    ])
+    def test_format_time(self, time_taken, expected):
+        self.assertEqual(expected, self.plugin._format_time(time_taken))
