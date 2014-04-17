@@ -20,13 +20,13 @@ class TimerPlugin(Plugin):
     time_format = re.compile(r'^(?P<time>\d+)(?P<units>s|ms)?$')
     _timed_tests = multiprocessing.Manager().dict()
 
-    def _timeTaken(self):
+    def _time_taken(self):
         if hasattr(self, '_timer'):
             taken = time.time() - self._timer
         else:
-            # test died before it ran (probably error in setup())
-            # or success/failure added before test started probably
-            # due to custom TestResult munging
+            # Test died before it ran (probably error in setup()) or
+            # success/failure added before test started probably due to custom
+            # `TestResult` munging.
             taken = 0.0
         return taken
 
@@ -35,10 +35,11 @@ class TimerPlugin(Plugin):
         Raises the ``ValueError`` for invalid format.
         """
         try:
-            # Default time unit is second, we should convert it to milliseconds
+            # Default time unit is a second, we should convert it to
+            # milliseconds.
             return int(value) * 1000
         except ValueError:
-            # Try to parse if we are unlucky to cast value into int
+            # Try to parse if we are unlucky to cast value into int.
             m = self.time_format.match(value)
             if not m:
                 raise ValueError("Could not parse time represented by "
@@ -90,7 +91,7 @@ class TimerPlugin(Plugin):
         return "{0}: {1}".format(test, self._colored_time(time_taken))
 
     def _register_time(self, test):
-        self._timed_tests[test.id()] = self._timeTaken()
+        self._timed_tests[test.id()] = self._time_taken()
 
     def addError(self, test, err, capt=None):
         """Called when a test raises an uncaught exception."""

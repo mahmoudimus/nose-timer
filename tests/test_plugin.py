@@ -31,13 +31,13 @@ class TestTimerPlugin(unittest.TestCase):
         for attr in attributes:
             self.assertTrue(hasattr(self.plugin, attr))
 
-    def test_timeTaken(self):
+    def test_time_taken(self):
         self.assertFalse(hasattr(self.plugin, '_timer'))
-        self.assertEquals(self.plugin._timeTaken(), 0.0)
+        self.assertEquals(self.plugin._time_taken(), 0.0)
 
         self.plugin.startTest(self.test_mock)
         self.assertTrue(hasattr(self.plugin, '_timer'))
-        self.assertNotEquals(self.plugin._timeTaken(), 0.0)
+        self.assertNotEquals(self.plugin._time_taken(), 0.0)
 
     @parameterized.expand([
         ('1', 1000),  # seconds by default
