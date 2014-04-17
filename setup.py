@@ -18,6 +18,7 @@ setup(
         'Anton Egorov',
         'Dmitry Sandalov',
         'Stanislav Kudriashev',
+        'Raoul Snyman',
     ]),
     url='https://github.com/mahmoudimus/nose-timer',
     packages=['nosetimer', ],
