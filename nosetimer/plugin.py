@@ -56,6 +56,7 @@ class TimerPlugin(Plugin):
             self.timer_top_n = int(options.timer_top_n)
             self.timer_ok = self._parse_time(options.timer_ok)
             self.timer_warning = self._parse_time(options.timer_warning)
+            self.timer_no_color = options.timer_no_color
 
     def startTest(self, test):
         """Initializes a timer before starting a test."""
@@ -75,6 +76,8 @@ class TimerPlugin(Plugin):
                 stream.writeln(self._format_report(test, time_taken))
 
     def _colored_time(self, time_taken):
+        if self.timer_no_color:
+            return "{0:0.4f}s".format(time_taken)
         time_taken_ms = time_taken * 1000
         if time_taken_ms <= self.timer_ok:
             color = 'green'
@@ -111,7 +114,8 @@ class TimerPlugin(Plugin):
                 output = 'ok'
                 time_taken = self._timed_tests.get(test.id())
                 if time_taken is not None:
-                    output += ' ({0})'.format(self._colored_time(time_taken))
+                    time_taken = self._colored_time(time_taken)
+                    output += ' ({0})'.format(time_taken)
                 result.stream.writeln(output)
             elif result.dots:
                 result.stream.write('.')
@@ -149,3 +153,9 @@ class TimerPlugin(Plugin):
         parser.add_option("--timer-warning", action="store", default=3,
                           dest="timer_warning",
                           help=_warning_help)
+
+        _no_color_help = "Don't colorize output (useful for non-tty output)."
+
+        parser.add_option("--timer-no-color", action="store_true",
+                          default=False, dest="timer_no_color",
+                          help=_no_color_help)
