@@ -75,6 +75,7 @@ class TimerPlugin(Plugin):
                 stream.writeln(self._format_report(test, time_taken))
 
     def _colored_time(self, time_taken):
+        """Get formatted and colored string for a given time taken."""
         time_taken_ms = time_taken * 1000
         if time_taken_ms <= self.timer_ok:
             color = 'green'
