@@ -53,7 +53,7 @@ How do I turn off pretty colors?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In some cases, you may want to disable colors completely. This is done by using the
-``--timer-no-colors`` flag. This is useful when running tests in a headless console.
+``--timer-no-color`` flag. This is useful when running tests in a headless console.
 
 
 License
