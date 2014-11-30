@@ -26,7 +26,7 @@ setup(
         'nose',
         'termcolor',
     ],
-    license='LICENSE',
+    license='MIT or BSD',
     entry_points={
         'nose.plugins.0.10': [
             'nosetimer = nosetimer.plugin:TimerPlugin',
