@@ -14,6 +14,20 @@ Install
 
    pip install nose-timer
 
+Or to install the latest development version from Git:
+
+.. code::
+
+    pip install git+git://github.com/mahmoudimus/nose-timer.git
+
+Or to install the latest from source:
+
+.. code::
+
+    git clone https://github.com/mahmoudimus/nose-timer.git
+    cd nose-timer
+    python setup.py install
+
 
 Usage
 -----
