@@ -1,12 +1,20 @@
 language: python
 env:
-  - TOXENV=pep8
-  - TOXENV=py26
-  - TOXENV=py27
-  - TOXENV=py33
-  - TOXENV=py34
+- TOXENV=pep8
+- TOXENV=py26
+- TOXENV=py27
+- TOXENV=py33
+- TOXENV=py34
 install:
-  - pip install tox
-  - pip install mock
+- pip install tox
+- pip install mock
 script:
-  - tox
+- tox
+deploy:
+  provider: pypi
+  user: Mahmoud.Abdelkader
+  password:
+    secure: OhjlsFN3zIHqW6PlpSanlHhJ3Bx6jIAPZM6jObMeA4yXp74NCdzpPBS/Drdj0dnKXj5edkzUQ4iC72Eyx5vmHvq0yHIM49FvfEliJ5oihQGgqZufqA6EjaVSvRaRh7ZERcwGKzbPpCGulh55V1bURDFOTXwk2n9X4/xmIyX3v7w=
+  on:
+    tags: true
+    repo: mahmoudimus/nose-timer
