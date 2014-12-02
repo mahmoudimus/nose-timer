@@ -18,3 +18,4 @@ deploy:
   on:
     tags: true
     repo: mahmoudimus/nose-timer
+    branch: master
