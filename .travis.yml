@@ -1,8 +1,11 @@
 language: python
 env:
 - TOXENV=pep8
+- TOXENV=pypy
+- TOXENV=pypy3
 - TOXENV=py26
 - TOXENV=py27
+- TOXENV=py32
 - TOXENV=py33
 - TOXENV=py34
 install:
@@ -19,3 +22,8 @@ deploy:
     tags: true
     all_branches: true
     repo: mahmoudimus/nose-timer
+matrix:
+  allow_failures:
+    - python: "pypy3"
+    - python: "3.2"
+  fast_finish: true
