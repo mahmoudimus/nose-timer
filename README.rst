@@ -103,3 +103,4 @@ Contributors
 - `@satyrius <https://github.com/satyrius>`_
 - `@skudriashev <https://github.com/skudriashev>`_
 - `@whodafly <https://github.com/whodafly>`_
+- `@hugovk <https://github.com/hugovk>`_
