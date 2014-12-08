@@ -23,7 +23,4 @@ deploy:
     all_branches: true
     repo: mahmoudimus/nose-timer
 matrix:
-  allow_failures:
-    - python: "pypy3"
-    - python: "3.2"
   fast_finish: true
