@@ -18,7 +18,10 @@ class TimerPlugin(Plugin):
     score = 1
 
     time_format = re.compile(r'^(?P<time>\d+)(?P<units>s|ms)?$')
-    _timed_tests = multiprocessing.Manager().dict()
+
+    def __init__(self):
+        super(TimerPlugin, self).__init__()
+        self._timed_tests = multiprocessing.Manager().dict()
 
     def _time_taken(self):
         if hasattr(self, '_timer'):
