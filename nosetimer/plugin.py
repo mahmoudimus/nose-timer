@@ -4,7 +4,7 @@ import operator
 import os
 import re
 import termcolor
-import time
+import timeit
 
 from nose.plugins import Plugin
 
@@ -25,7 +25,7 @@ class TimerPlugin(Plugin):
 
     def _time_taken(self):
         if hasattr(self, '_timer'):
-            taken = time.time() - self._timer
+            taken = timeit.default_timer() - self._timer
         else:
             # Test died before it ran (probably error in setup()) or
             # success/failure added before test started probably due to custom
@@ -64,7 +64,7 @@ class TimerPlugin(Plugin):
 
     def startTest(self, test):
         """Initializes a timer before starting a test."""
-        self._timer = time.time()
+        self._timer = timeit.default_timer()
 
     def report(self, stream):
         """Report the test times."""
