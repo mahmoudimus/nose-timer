@@ -10,19 +10,15 @@ A timer plugin for nosetests that answers the question: *how much time does ever
 Install
 -------
 
-.. code::
+To install the latest release from PyPI::
 
    pip install nose-timer
 
-Or to install the latest development version from Git:
-
-.. code::
+Or to install the latest development version from Git::
 
     pip install git+git://github.com/mahmoudimus/nose-timer.git
 
-Or to install the latest from source:
-
-.. code::
+Or to install the latest from source::
 
     git clone https://github.com/mahmoudimus/nose-timer.git
     cd nose-timer
@@ -33,9 +29,7 @@ Usage
 -----
 
 Run nosetests with the ``--with-timer`` flag, and you will see a list of the
-tests and the time spent by each one (in seconds):
-
-.. code:: bash
+tests and the time spent by each one (in seconds)::
 
    myapp.tests.ABigTestCase.test_the_world_is_running: 56.0010s
    myapp.tests.ABigTestCase.test_the_rest_of_the_galaxy_is_running: 2356.0010s
@@ -45,9 +39,7 @@ How do I show only the ``n`` slowest tests?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 For example, to show only the **10** slowest tests, run nosetests with the
-``--timer-top-n`` flag.
-
-.. code:: bash
+``--timer-top-n`` flag::
 
    nosetests --with-timer --timer-top-n 10
 
