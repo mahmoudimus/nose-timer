@@ -1,7 +1,7 @@
 nose-timer
 ==========
 
-A timer plugin for nosetests that answers the question: *how much time does every test take?*
+A timer plugin for nosetests that answers the question: *how much time does each test take?*
 
 .. image:: https://travis-ci.org/mahmoudimus/nose-timer.png?branch=master
    :target: https://travis-ci.org/mahmoudimus/nose-timer
