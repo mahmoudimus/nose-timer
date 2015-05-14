@@ -1,5 +1,4 @@
 import logging
-import multiprocessing
 import operator
 import os
 import re
@@ -21,7 +20,7 @@ class TimerPlugin(Plugin):
 
     def __init__(self):
         super(TimerPlugin, self).__init__()
-        self._timed_tests = multiprocessing.Manager().dict()
+        self._timed_tests = {}
 
     def _time_taken(self):
         if hasattr(self, '_timer'):
