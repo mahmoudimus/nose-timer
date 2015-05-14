@@ -1,10 +1,13 @@
 import logging
-import multiprocessing
 import operator
 import os
 import re
 import termcolor
 import timeit
+
+# Windows and Python 2.7 multiprocessing don't marry well.
+if os.name != 'nt':
+    import multiprocessing
 
 from nose.plugins import Plugin
 
@@ -21,7 +24,11 @@ class TimerPlugin(Plugin):
 
     def __init__(self):
         super(TimerPlugin, self).__init__()
-        self._timed_tests = multiprocessing.Manager().dict()
+
+        if os.name != 'nt':
+            self._timed_tests = multiprocessing.Manager().dict()
+        else:
+            self._timed_tests = {}
 
     def _time_taken(self):
         if hasattr(self, '_timer'):
