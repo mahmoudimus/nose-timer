@@ -59,6 +59,11 @@ class TimerPlugin(Plugin):
                 time *= 1000
             return time
 
+    @staticmethod
+    def _parse_filter(value):
+        """Parse timer filters."""
+        return value.split(',') if value is not None else None
+
     def configure(self, options, config):
         """Configures the test timer plugin."""
         super(TimerPlugin, self).configure(options, config)
@@ -67,6 +72,7 @@ class TimerPlugin(Plugin):
             self.timer_top_n = int(options.timer_top_n)
             self.timer_ok = self._parse_time(options.timer_ok)
             self.timer_warning = self._parse_time(options.timer_warning)
+            self.timer_filter = self._parse_filter(options.timer_filter)
 
             # Windows + nosetests does not support colors (even with colorama).
             if os.name == 'nt':
@@ -89,12 +95,23 @@ class TimerPlugin(Plugin):
 
         for i, (test, time_taken) in enumerate(d):
             if i < self.timer_top_n or self.timer_top_n == -1:
-                stream.writeln(self._format_report(test, time_taken))
+                color = self._get_result_color(time_taken)
+                line = self._format_report_line(test, time_taken, color)
+                _filter = self._color_to_filter(color)
+                if (self.timer_filter is None or _filter is None or
+                        _filter in self.timer_filter):
+                    stream.writeln(line)
 
-    def _colored_time(self, time_taken):
-        """Get formatted and colored string for a given time taken."""
-        if self.timer_no_color:
-            return "{0:0.4f}s".format(time_taken)
+    def _color_to_filter(self, color):
+        """Get filter name by a given color."""
+        return {
+            'green': 'ok',
+            'yellow': 'warning',
+            'red': 'error',
+        }.get(color)
+
+    def _get_result_color(self, time_taken):
+        """Get time taken result color."""
         time_taken_ms = time_taken * 1000
         if time_taken_ms <= self.timer_ok:
             color = 'green'
@@ -102,11 +119,18 @@ class TimerPlugin(Plugin):
             color = 'yellow'
         else:
             color = 'red'
+
+        return color
+
+    def _colored_time(self, time_taken, color=None):
+        """Get formatted and colored string for a given time taken."""
+        if self.timer_no_color:
+            return "{0:0.4f}s".format(time_taken)
         return termcolor.colored("{0:0.4f}s".format(time_taken), color)
 
-    def _format_report(self, test, time_taken):
+    def _format_report_line(self, test, time_taken, color):
         """Format a single report line."""
-        return "{0}: {1}".format(test, self._colored_time(time_taken))
+        return "{0}: {1}".format(test, self._colored_time(time_taken, color))
 
     def _register_time(self, test):
         self._timed_tests[test.id()] = self._time_taken()
@@ -131,7 +155,9 @@ class TimerPlugin(Plugin):
                 output = 'ok'
                 time_taken = self._timed_tests.get(test.id())
                 if time_taken is not None:
-                    output += ' ({0})'.format(self._colored_time(time_taken))
+                    color = self._get_result_color(time_taken)
+                    output += ' ({0})'.format(self._colored_time(time_taken,
+                                                                 color))
                 result.stream.writeln(output)
             elif result.dots:
                 result.stream.write('.')
@@ -145,31 +171,30 @@ class TimerPlugin(Plugin):
         """Register commandline options."""
         super(TimerPlugin, self).options(parser, env)
 
+        # timer top n
         _help = ("When the timer plugin is enabled, only show the N tests "
                  "that consume more time. The default, -1, shows all tests.")
-
         parser.add_option("--timer-top-n", action="store", default="-1",
                           dest="timer_top_n", help=_help)
 
         _time_units_help = ("Default time unit is a second, but you can set "
                             "it explicitly (e.g. 1s, 500ms).")
 
+        # timer ok
         _ok_help = ("Normal execution time. Such tests will be highlighted in "
                     "green. {units_help}".format(units_help=_time_units_help))
-
         parser.add_option("--timer-ok", action="store", default=1,
-                          dest="timer_ok",
-                          help=_ok_help)
+                          dest="timer_ok", help=_ok_help)
 
+        # time warning
         _warning_help = ("Warning about execution time to highlight slow "
                          "tests in yellow. Tests which take more time will "
                          "be highlighted in red. {units_help}".format(
                              units_help=_time_units_help))
-
         parser.add_option("--timer-warning", action="store", default=3,
-                          dest="timer_warning",
-                          help=_warning_help)
+                          dest="timer_warning", help=_warning_help)
 
+        # timer no color
         _no_color_help = "Don't colorize output (useful for non-tty output)."
 
         # Windows + nosetests does not support colors (even with colorama).
@@ -177,3 +202,8 @@ class TimerPlugin(Plugin):
             parser.add_option("--timer-no-color", action="store_true",
                               default=False, dest="timer_no_color",
                               help=_no_color_help)
+
+        # timer filter
+        _filter_help = "Show filtered results only (ok,warning,error)"
+        parser.add_option("--timer-filter", action="store", default=None,
+                          dest="timer_filter", help=_filter_help)

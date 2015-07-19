@@ -12,7 +12,7 @@ Install
 
 To install the latest release from PyPI::
 
-   pip install nose-timer
+    pip install nose-timer
 
 Or to install the latest development version from Git::
 
@@ -31,8 +31,8 @@ Usage
 Run nosetests with the ``--with-timer`` flag, and you will see a list of the
 tests and the time spent by each one (in seconds)::
 
-   myapp.tests.ABigTestCase.test_the_world_is_running: 56.0010s
-   myapp.tests.ABigTestCase.test_the_rest_of_the_galaxy_is_running: 2356.0010s
+    myapp.tests.ABigTestCase.test_the_world_is_running: 56.0010s
+    myapp.tests.ABigTestCase.test_the_rest_of_the_galaxy_is_running: 2356.0010s
 
 
 How do I show only the ``n`` slowest tests?
@@ -41,7 +41,7 @@ How do I show only the ``n`` slowest tests?
 For example, to show only the **10** slowest tests, run nosetests with the
 ``--timer-top-n`` flag::
 
-   nosetests --with-timer --timer-top-n 10
+    nosetests --with-timer --timer-top-n 10
 
 
 How do I color the output and have pretty colors?
@@ -60,6 +60,22 @@ How do I turn off pretty colors?
 
 In some cases, you may want to disable colors completely. This is done by using the
 ``--timer-no-color`` flag. This is useful when running tests in a headless console.
+
+
+How do I filter results by colors?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It is possible to filter results by color. To do so, you can use the
+``--timer-filter`` flag::
+
+    nosetests --with-timer --timer-filer ok
+    nosetests --with-timer --timer-filer warning
+    nosetests --with-timer --timer-filer error
+
+
+Or to apply several filters at once::
+
+    nosetests --with-timer --timer-filer warning,error
 
 
 License
