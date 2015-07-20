@@ -6,7 +6,7 @@ from setuptools import setup
 
 setup(
     name='nose-timer',
-    version='0.4.4',
+    version='0.5.0',
     description='A timer plugin for nosetests',
     long_description=open('README.rst').read(),
     author=', '.join([
