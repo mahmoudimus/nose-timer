@@ -68,14 +68,14 @@ How do I filter results by colors?
 It is possible to filter results by color. To do so, you can use the
 ``--timer-filter`` flag::
 
-    nosetests --with-timer --timer-filer ok
-    nosetests --with-timer --timer-filer warning
-    nosetests --with-timer --timer-filer error
+    nosetests --with-timer --timer-filter ok
+    nosetests --with-timer --timer-filter warning
+    nosetests --with-timer --timer-filter error
 
 
 Or to apply several filters at once::
 
-    nosetests --with-timer --timer-filer warning,error
+    nosetests --with-timer --timer-filter warning,error
 
 
 License
