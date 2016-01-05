@@ -63,6 +63,14 @@ class TimerPlugin(Plugin):
         """Parse timer filters."""
         return value.split(',') if value is not None else None
 
+    @staticmethod
+    def _parse_inline_only(inline_only, verbosity):
+        """Parse and validate inline-only option."""
+        inline_only = bool(inline_only)
+        if inline_only and (not verbosity or verbosity < 2):
+            raise ValueError('inline-only option requires nose verbosity >= 2')
+        return inline_only
+
     def configure(self, options, config):
         """Configures the test timer plugin."""
         super(TimerPlugin, self).configure(options, config)
@@ -73,6 +81,9 @@ class TimerPlugin(Plugin):
             self.timer_warning = self._parse_time(options.timer_warning)
             self.timer_filter = self._parse_filter(options.timer_filter)
             self.timer_no_color = True
+            self.verbosity = int(options.verbosity)
+            self.inline_only = self._parse_inline_only(
+                options.inline_only, self.verbosity)
 
             # Windows + nosetests does not support colors (even with colorama).
             if os.name != 'nt':
@@ -88,7 +99,7 @@ class TimerPlugin(Plugin):
 
     def report(self, stream):
         """Report the test times."""
-        if not self.enabled:
+        if not self.enabled or self.inline_only:
             return
 
         # if multiprocessing plugin enabled - get items from results queue
@@ -146,8 +157,7 @@ class TimerPlugin(Plugin):
     def _register_time(self, test):
         if self.multiprocessing_enabled:
             _results_queue.put((test.id(), self._time_taken()))
-        else:
-            self._timed_tests[test.id()] = self._time_taken()
+        self._timed_tests[test.id()] = self._time_taken()
 
     def addError(self, test, err, capt=None):
         """Called when a test raises an uncaught exception."""
@@ -221,3 +231,10 @@ class TimerPlugin(Plugin):
         _filter_help = "Show filtered results only (ok,warning,error)"
         parser.add_option("--timer-filter", action="store", default=None,
                           dest="timer_filter", help=_filter_help)
+
+        # inline only
+        _inline_only_help = ("Suppress separate test timing lines, instead "
+                             " only appending times to nose's own test output "
+                             " lines. Requires --verbosity >= 2")
+        parser.add_option("--inline-only", action="store_true", default=False,
+                          dest="inline_only", help=_inline_only_help)

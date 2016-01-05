@@ -17,11 +17,12 @@ class TestTimerPlugin(unittest.TestCase):
         self.test_mock = mock.MagicMock(name='test')
         self.test_mock.id.return_value = 1
         self.opts_mock = mock.MagicMock(name='opts')
+        self.opts_mock.inline_only = False
 
     def test_options(self):
         parser = mock.MagicMock()
         self.plugin.options(parser)
-        self.assertEquals(parser.add_option.call_count, 6)
+        self.assertEquals(parser.add_option.call_count, 7)
 
     def test_configure(self):
         attributes = ('config', 'timer_top_n')
@@ -31,6 +32,14 @@ class TestTimerPlugin(unittest.TestCase):
         self.plugin.configure(self.opts_mock, None)
         for attr in attributes:
             self.assertTrue(hasattr(self.plugin, attr))
+
+    def test_inline_only(self):
+        self.opts_mock.inline_only = True
+        self.assertRaises(ValueError, self.plugin.configure,
+                          self.opts_mock, None)
+        self.opts_mock.verbosity = 2
+        self.plugin.configure(self.opts_mock, None)
+        self.assertTrue(hasattr(self.plugin, 'inline_only'))
 
     def test_time_taken(self):
         self.assertFalse(hasattr(self.plugin, '_timer'))
@@ -59,7 +68,7 @@ class TestTimerPlugin(unittest.TestCase):
         time = '100ms'
         with mock.patch.object(self.plugin, '_parse_time') as parse_time:
             parse_time.return_value = time
-            mock_opts = mock.MagicMock(**{option: time})
+            mock_opts = mock.MagicMock(**{option: time, 'inline_only': False})
             self.plugin.configure(mock_opts, None)
             self.assertEqual(getattr(mock_opts, option), time)
             parse_time.has_call(time)
