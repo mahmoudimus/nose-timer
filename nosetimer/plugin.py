@@ -5,6 +5,8 @@ import re
 import termcolor
 import timeit
 
+from nose.plugins import Plugin
+
 # Windows and Python 2.7 multiprocessing don't marry well.
 _results_queue = None
 if os.name != 'nt':
@@ -14,8 +16,6 @@ if os.name != 'nt':
     except ImportError:
         import queue as Queue
     _results_queue = multiprocessing.Queue()
-
-from nose.plugins import Plugin
 
 log = logging.getLogger('nose.plugin.timer')
 
@@ -146,8 +146,8 @@ class TimerPlugin(Plugin):
     def _register_time(self, test):
         if self.multiprocessing_enabled:
             _results_queue.put((test.id(), self._time_taken()))
-        else:
-            self._timed_tests[test.id()] = self._time_taken()
+
+        self._timed_tests[test.id()] = self._time_taken()
 
     def addError(self, test, err, capt=None):
         """Called when a test raises an uncaught exception."""
