@@ -7,15 +7,58 @@ import timeit
 
 from nose.plugins import Plugin
 
+# try to import Queue
+try:
+    import Queue
+except ImportError:
+    import queue as Queue
+
+# define constants
+IS_NT = os.name == 'nt'
+
 # Windows and Python 2.7 multiprocessing don't marry well.
 _results_queue = None
-if os.name != 'nt':
+if not IS_NT:
     import multiprocessing
-    try:
-        import Queue
-    except ImportError:
-        import queue as Queue
-    _results_queue = multiprocessing.Queue()
+    from multiprocessing import queues
+
+    class TimerQueue(queues.Queue):
+        """A portable implementation of multiprocessing.Queue.
+
+        Because of multithreading / multiprocessing semantics, Queue.qsize()
+        may raise the NotImplementedError exception on Unix platforms like
+        Mac OS X where sem_getvalue() is not implemented. This subclass
+        addresses this problem by using a synchronized shared counter
+        (initialized to zero) and increasing / decreasing its value every time
+        the put() and get() methods are called, respectively. This not only
+        prevents NotImplementedError from being raised, but also allows us to
+        implement a reliable version of both qsize() and empty().
+        """
+
+        def __init__(self, *args, **kwargs):
+            super(TimerQueue, self).__init__(*args, **kwargs)
+            self.size = multiprocessing.Value('i', 0)
+
+        def put(self, *args, **kwargs):
+            with self.size.get_lock():
+                self.size.value += 1
+            super(TimerQueue, self).put(*args, **kwargs)
+
+        def get(self, *args, **kwargs):
+            with self.size.get_lock():
+                self.size.value -= 1
+            return super(TimerQueue, self).get(*args, **kwargs)
+
+        def qsize(self):
+            """Reliable implementation of multiprocessing.Queue.qsize()."""
+            return self.size.value
+
+        def empty(self):
+            """Reliable implementation of multiprocessing.Queue.empty()."""
+            return not self.qsize()
+
+    _results_queue = TimerQueue()
+
 
 log = logging.getLogger('nose.plugin.timer')
 
@@ -75,7 +118,7 @@ class TimerPlugin(Plugin):
             self.timer_no_color = True
 
             # Windows + nosetests does not support colors (even with colorama).
-            if os.name != 'nt':
+            if not IS_NT:
                 self.timer_no_color = options.timer_no_color
 
             # determine if multiprocessing plugin enabled
@@ -95,7 +138,7 @@ class TimerPlugin(Plugin):
         if self.multiprocessing_enabled:
             for i in range(_results_queue.qsize()):
                 try:
-                    k, v = _results_queue.get_nowait()
+                    k, v = _results_queue.get(False)
                     self._timed_tests[k] = v
                 except Queue.Empty:
                     pass
@@ -212,7 +255,7 @@ class TimerPlugin(Plugin):
         _no_color_help = "Don't colorize output (useful for non-tty output)."
 
         # Windows + nosetests does not support colors (even with colorama).
-        if os.name != 'nt':
+        if not IS_NT:
             parser.add_option("--timer-no-color", action="store_true",
                               default=False, dest="timer_no_color",
                               help=_no_color_help)
