@@ -22,6 +22,8 @@ if not IS_NT:
     import multiprocessing
     from multiprocessing import queues
 
+    print(multiprocessing.Queue)
+
     class TimerQueue(queues.Queue):
         """A portable implementation of multiprocessing.Queue.
 
@@ -36,6 +38,8 @@ if not IS_NT:
         """
 
         def __init__(self, *args, **kwargs):
+            if hasattr(multiprocessing, 'get_context'):
+                kwargs.update(ctx=multiprocessing.get_context())
             super(TimerQueue, self).__init__(*args, **kwargs)
             self.size = multiprocessing.Value('i', 0)
 
