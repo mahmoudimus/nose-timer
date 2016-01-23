@@ -71,12 +71,12 @@ class TestTimerPlugin(unittest.TestCase):
         (2.00,   '2.0000s', 'yellow'),
         (2.0001, '2.0001s', 'red'),
     ])
-    @mock.patch("nosetimer.plugin.termcolor.colored")
+    @mock.patch("nosetimer.plugin.colorize")
     def test_colored_time(self, time_taken, expected, color, colored_mock):
         self.plugin._colored_time(time_taken, color)
         colored_mock.assert_called_once_with(expected, color)
 
-    @mock.patch("nosetimer.plugin.termcolor.colored")
+    @mock.patch("nosetimer.plugin.colorize")
     def test_no_color_option(self, colored_mock):
         self.plugin.timer_no_color = True
         self.assertEqual(self.plugin._colored_time(1), "1.0000s")
