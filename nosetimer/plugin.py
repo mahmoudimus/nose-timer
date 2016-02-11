@@ -22,8 +22,6 @@ if not IS_NT:
     import multiprocessing
     from multiprocessing import queues
 
-    print(multiprocessing.Queue)
-
     class TimerQueue(queues.Queue):
         """A portable implementation of multiprocessing.Queue.
 
