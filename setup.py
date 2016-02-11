@@ -24,8 +24,7 @@ setup(
     url='https://github.com/mahmoudimus/nose-timer',
     packages=['nosetimer', ],
     install_requires=[
-        'nose',
-        'termcolor',
+        'nose'
     ],
     license='MIT or BSD',
     entry_points={

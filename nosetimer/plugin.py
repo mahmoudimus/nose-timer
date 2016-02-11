@@ -2,7 +2,6 @@ import logging
 import operator
 import os
 import re
-import termcolor
 import timeit
 
 from nose.plugins import Plugin
@@ -63,6 +62,14 @@ if not IS_NT:
 
 
 log = logging.getLogger('nose.plugin.timer')
+
+
+def colorize(string, color):
+    try:
+        import termcolor
+        return termcolor.colored(string, color)
+    except ImportError:
+        return string
 
 
 class TimerPlugin(Plugin):
@@ -182,7 +189,7 @@ class TimerPlugin(Plugin):
         """Get formatted and colored string for a given time taken."""
         if self.timer_no_color:
             return "{0:0.4f}s".format(time_taken)
-        return termcolor.colored("{0:0.4f}s".format(time_taken), color)
+        return colorize("{0:0.4f}s".format(time_taken), color)
 
     def _format_report_line(self, test, time_taken, color):
         """Format a single report line."""
