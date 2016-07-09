@@ -22,7 +22,13 @@ Or to install the latest from source::
 
     git clone https://github.com/mahmoudimus/nose-timer.git
     cd nose-timer
-    python setup.py install
+    pip install .
+
+You can also make a developer install if you plan on modifying the
+source frequently::
+
+    pip install -e .
+
 
 
 Usage
@@ -76,6 +82,29 @@ It is possible to filter results by color. To do so, you can use the
 Or to apply several filters at once::
 
     nosetests --with-timer --timer-filter warning,error
+
+How do I export the results ?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Use the ``--timer-json-file <myfile.json>`` flag, it will save the result
+in the following format::
+
+  {
+   'tests':
+    {
+    '<test key 1>':
+      {
+        'status': 'success'|'error'|'fail,
+        'time': <float in s>
+      },
+    '<test key 2>':
+      {
+        'status': 'success'|'error'|'fail,
+        'time': <float in s>
+      },
+     ....
+   }
+
 
 
 License

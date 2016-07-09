@@ -1,5 +1,4 @@
 import logging
-import operator
 import os
 import re
 import termcolor
@@ -118,6 +117,7 @@ class TimerPlugin(Plugin):
             self.timer_warning = self._parse_time(options.timer_warning)
             self.timer_filter = self._parse_filter(options.timer_filter)
             self.timer_no_color = True
+            self.json_file = options.json_file
 
             # Windows + nosetests does not support colors (even with colorama).
             if not IS_NT:
@@ -140,19 +140,27 @@ class TimerPlugin(Plugin):
         if self.multiprocessing_enabled:
             for i in range(_results_queue.qsize()):
                 try:
-                    k, v = _results_queue.get(False)
-                    self._timed_tests[k] = v
+                    k, v, s = _results_queue.get(False)
+                    self._timed_tests[k] = {'time': v,
+                                            'status': s}
                 except Queue.Empty:
                     pass
 
         d = sorted(self._timed_tests.items(),
-                   key=operator.itemgetter(1),
+                   key=lambda item: item[1]['time'],
                    reverse=True)
+        if self.json_file:
+            import json
+            with open(self.json_file, 'w') as f:
+                json.dump({'tests': dict((k, v) for k, v in d)}, f)
 
-        for i, (test, time_taken) in enumerate(d):
+        for i, (test, time_and_status) in enumerate(d):
+            time_taken = time_and_status['time']
+            status = time_and_status['status']
             if i < self.timer_top_n or self.timer_top_n == -1:
                 color = self._get_result_color(time_taken)
-                line = self._format_report_line(test, time_taken, color)
+                line = self._format_report_line(test, time_taken,
+                                                color, status)
                 _filter = self._color_to_filter(color)
                 if (self.timer_filter is None or _filter is None or
                         _filter in self.timer_filter):
@@ -184,27 +192,31 @@ class TimerPlugin(Plugin):
             return "{0:0.4f}s".format(time_taken)
         return termcolor.colored("{0:0.4f}s".format(time_taken), color)
 
-    def _format_report_line(self, test, time_taken, color):
+    def _format_report_line(self, test, time_taken, color, status):
         """Format a single report line."""
-        return "{0}: {1}".format(test, self._colored_time(time_taken, color))
+        return "[{0}]{1}: {2}".format(status, test,
+                                      self._colored_time(time_taken, color))
 
-    def _register_time(self, test):
+    def _register_time(self, test, status=None):
         if self.multiprocessing_enabled:
-            _results_queue.put((test.id(), self._time_taken()))
+            _results_queue.put((test.id(), self._time_taken(), None))
 
-        self._timed_tests[test.id()] = self._time_taken()
+        self._timed_tests[test.id()] = {
+                                        'time': self._time_taken(),
+                                        'status': status
+                                       }
 
     def addError(self, test, err, capt=None):
         """Called when a test raises an uncaught exception."""
-        self._register_time(test)
+        self._register_time(test, 'error')
 
     def addFailure(self, test, err, capt=None, tb_info=None):
         """Called when a test fails."""
-        self._register_time(test)
+        self._register_time(test, 'fail')
 
     def addSuccess(self, test, capt=None):
         """Called when a test passes."""
-        self._register_time(test)
+        self._register_time(test, 'success')
 
     def prepareTestResult(self, result):
         """Called before the first test is run."""
@@ -212,7 +224,7 @@ class TimerPlugin(Plugin):
             """Called when a test passes."""
             if result.showAll:
                 output = 'ok'
-                time_taken = self._timed_tests.get(test.id())
+                time_taken = self._timed_tests.get(test.id())['time']
                 if time_taken is not None:
                     color = self._get_result_color(time_taken)
                     output += ' ({0})'.format(self._colored_time(time_taken,
@@ -235,6 +247,14 @@ class TimerPlugin(Plugin):
                  "that consume more time. The default, -1, shows all tests.")
         parser.add_option("--timer-top-n", action="store", default="-1",
                           dest="timer_top_n", help=_help)
+
+        _help = ("Save the results of the timing and status of each"
+                 "tests in said Json file")
+
+        parser.add_option("--timer-json-file", action="store",
+                          default=None,
+                          dest="json_file",
+                          help=_help)
 
         _time_units_help = ("Default time unit is a second, but you can set "
                             "it explicitly (e.g. 1s, 500ms).")

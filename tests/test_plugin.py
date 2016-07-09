@@ -21,7 +21,7 @@ class TestTimerPlugin(unittest.TestCase):
     def test_options(self):
         parser = mock.MagicMock()
         self.plugin.options(parser)
-        self.assertEquals(parser.add_option.call_count, 6)
+        self.assertEquals(parser.add_option.call_count, 7)
 
     def test_configure(self):
         attributes = ('config', 'timer_top_n')
