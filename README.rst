@@ -143,3 +143,4 @@ Contributors
 - `@hugovk <https://github.com/hugovk>`_
 - `@cgoldberg <https://github.com/cgoldberg>`_
 - `@ereOn <https://github.com/ereOn>`_
+- `@HaraldNordgren <https://github.com/HaraldNordgren>`_

@@ -20,12 +20,14 @@ setup(
         'Stanislav Kudriashev',
         'Raoul Snyman',
         'Corey Goldberg',
+        'Harald Nordgren',
     ]),
     url='https://github.com/mahmoudimus/nose-timer',
     packages=['nosetimer', ],
     install_requires=[
         'nose',
         'termcolor',
+        'ordereddict',
     ],
     license='MIT or BSD',
     entry_points={
