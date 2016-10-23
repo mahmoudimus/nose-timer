@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 import re
@@ -6,11 +7,16 @@ import timeit
 
 from nose.plugins import Plugin
 
-# try to import Queue
 try:
     import Queue
 except ImportError:
     import queue as Queue
+
+try:
+    from collections import OrderedDict
+except ImportError:
+    from ordereddict import OrderedDict
+
 
 # define constants
 IS_NT = os.name == 'nt'
@@ -149,10 +155,11 @@ class TimerPlugin(Plugin):
         d = sorted(self._timed_tests.items(),
                    key=lambda item: item[1]['time'],
                    reverse=True)
+
         if self.json_file:
-            import json
+            dict_type = OrderedDict if self.timer_top_n else dict
             with open(self.json_file, 'w') as f:
-                json.dump({'tests': dict((k, v) for k, v in d)}, f)
+                json.dump({'tests': dict_type((k, v) for k, v in d)}, f)
 
         total_time = sum([vv['time'] for kk, vv in d])
 
