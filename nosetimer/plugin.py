@@ -154,13 +154,19 @@ class TimerPlugin(Plugin):
             with open(self.json_file, 'w') as f:
                 json.dump({'tests': dict((k, v) for k, v in d)}, f)
 
+        total_time = sum([vv['time'] for kk, vv in d])
+
         for i, (test, time_and_status) in enumerate(d):
             time_taken = time_and_status['time']
             status = time_and_status['status']
             if i < self.timer_top_n or self.timer_top_n == -1:
                 color = self._get_result_color(time_taken)
-                line = self._format_report_line(test, time_taken,
-                                                color, status)
+                percent = time_taken/total_time*100
+                line = self._format_report_line(test,
+                                                time_taken,
+                                                color,
+                                                status,
+                                                percent)
                 _filter = self._color_to_filter(color)
                 if (self.timer_filter is None or _filter is None or
                         _filter in self.timer_filter):
@@ -192,10 +198,12 @@ class TimerPlugin(Plugin):
             return "{0:0.4f}s".format(time_taken)
         return termcolor.colored("{0:0.4f}s".format(time_taken), color)
 
-    def _format_report_line(self, test, time_taken, color, status):
+    def _format_report_line(self, test, time_taken, color, status, percent):
         """Format a single report line."""
-        return "[{0}]{1}: {2}".format(status, test,
-                                      self._colored_time(time_taken, color))
+        return "[{0}] {3:04.2f}% {1}: {2}".format(
+                                      status, test,
+                                      self._colored_time(time_taken, color),
+                                      percent)
 
     def _register_time(self, test, status=None):
         if self.multiprocessing_enabled:
