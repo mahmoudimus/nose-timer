@@ -144,3 +144,4 @@ Contributors
 - `@cgoldberg <https://github.com/cgoldberg>`_
 - `@ereOn <https://github.com/ereOn>`_
 - `@HaraldNordgren <https://github.com/HaraldNordgren>`_
+- `@jakirkham <https://github.com/jakirkham>`_
