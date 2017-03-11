@@ -110,7 +110,7 @@ in the following format::
 License
 -------
 
-``nose-timer`` is an MIT/BSD dual-Licensed library.
+``nose-timer`` is MIT Licensed library.
 
 
 Contribute
