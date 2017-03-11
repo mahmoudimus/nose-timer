@@ -29,7 +29,7 @@ setup(
         'termcolor',
         'ordereddict',
     ],
-    license='MIT or BSD',
+    license='MIT',
     entry_points={
         'nose.plugins.0.10': [
             'nosetimer = nosetimer.plugin:TimerPlugin',
@@ -38,7 +38,6 @@ setup(
     classifiers=[
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
-        'License :: OSI Approved :: BSD License',
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
