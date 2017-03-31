@@ -15,11 +15,13 @@ matrix:
     env: TOXENV=py34
   - python: "3.5"
     env: TOXENV=py35
+  - python: "3.6"
+    env: TOXENV=py36
 install:
-- pip install tox
-- pip install mock
+  - pip install tox
+  - pip install mock
 script:
-- tox
+  - tox
 deploy:
   provider: pypi
   user: Mahmoud.Abdelkader
