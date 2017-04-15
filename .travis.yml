@@ -19,7 +19,6 @@ matrix:
     env: TOXENV=py36
 install:
   - pip install tox
-  - pip install mock
 script:
   - tox
 deploy:
