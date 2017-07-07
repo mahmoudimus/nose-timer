@@ -12,10 +12,7 @@ try:
 except ImportError:
     import queue as Queue
 
-try:
-    from collections import OrderedDict
-except ImportError:
-    from ordereddict import OrderedDict
+from collections import OrderedDict
 
 
 # define constants
