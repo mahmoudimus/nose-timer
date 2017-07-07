@@ -27,7 +27,6 @@ setup(
     install_requires=[
         'nose',
         'termcolor',
-        'ordereddict',
     ],
     license='MIT',
     entry_points={
