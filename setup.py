@@ -21,6 +21,7 @@ setup(
         'Raoul Snyman',
         'Corey Goldberg',
         'Harald Nordgren',
+        'Arthur Kulik'
     ]),
     url='https://github.com/mahmoudimus/nose-timer',
     packages=['nosetimer', ],

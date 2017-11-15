@@ -165,7 +165,7 @@ class TimerPlugin(Plugin):
             status = time_and_status['status']
             if i < self.timer_top_n or self.timer_top_n == -1:
                 color = self._get_result_color(time_taken)
-                percent = time_taken/total_time*100
+                percent = 0 if total_time == 0 else time_taken/total_time*100
                 line = self._format_report_line(test,
                                                 time_taken,
                                                 color,
