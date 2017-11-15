@@ -145,3 +145,4 @@ Contributors
 - `@ereOn <https://github.com/ereOn>`_
 - `@HaraldNordgren <https://github.com/HaraldNordgren>`_
 - `@jakirkham <https://github.com/jakirkham>`_
+- `@garbageek <https://github.com/garbageek>`_
