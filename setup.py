@@ -27,7 +27,6 @@ setup(
     packages=['nosetimer', ],
     install_requires=[
         'nose',
-        'termcolor',
     ],
     license='MIT',
     entry_points={
