@@ -2,7 +2,6 @@ import json
 import logging
 import os
 import re
-import termcolor
 import timeit
 
 from nose.plugins import Plugin
@@ -14,6 +13,20 @@ except ImportError:
 
 from collections import OrderedDict
 
+try:
+    import termcolor
+except ImportError:
+    termcolor = None
+
+try:
+    import colorama
+    TERMCOLOR2COLORAMA = {
+        'green': colorama.Fore.GREEN,
+        'yellow': colorama.Fore.YELLOW,
+        'red': colorama.Fore.RED,
+    }
+except ImportError:
+    colorama = None
 
 # define constants
 IS_NT = os.name == 'nt'
@@ -65,6 +78,19 @@ if not IS_NT:
 
 
 log = logging.getLogger('nose.plugin.timer')
+
+
+def _colorize(val, color):
+    """Colorize a string using termcolor or colorama.
+
+    If any of them are available.
+    """
+    if termcolor is not None:
+        val = termcolor.colored(val, color)
+    elif colorama is not None:
+        val = TERMCOLOR2COLORAMA[color] + val + colorama.Style.RESET_ALL
+
+    return val
 
 
 class TimerPlugin(Plugin):
@@ -200,7 +226,7 @@ class TimerPlugin(Plugin):
         """Get formatted and colored string for a given time taken."""
         if self.timer_no_color:
             return "{0:0.4f}s".format(time_taken)
-        return termcolor.colored("{0:0.4f}s".format(time_taken), color)
+        return _colorize("{0:0.4f}s".format(time_taken), color)
 
     def _format_report_line(self, test, time_taken, color, status, percent):
         """Format a single report line."""
