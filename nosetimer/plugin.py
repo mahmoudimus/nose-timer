@@ -1,4 +1,3 @@
-# -*- mode: python; coding: utf-8 -*-
 import json
 import logging
 import os
@@ -89,8 +88,7 @@ def _colorize(val, color):
         return termcolor.colored(val, color)
     if colorama is not None:
         return TERMCOLOR2COLORAMA[color] + val + colorama.Style.RESET_ALL
-    else:
-        return val
+    return val
 
 
 class TimerPlugin(Plugin):
