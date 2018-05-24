@@ -102,6 +102,10 @@ class TimerPlugin(Plugin):
     time_format = re.compile(r'^(?P<time>\d+)(?P<units>s|ms)?$')
     _timed_tests = {}
 
+    def __init__(self, *args, **kwargs):
+        super(TimerPlugin, self).__init__(*args, **kwargs)
+        self._threshold = None
+
     def _time_taken(self):
         if hasattr(self, '_timer'):
             taken = timeit.default_timer() - self._timer
@@ -145,6 +149,7 @@ class TimerPlugin(Plugin):
             self.timer_ok = self._parse_time(options.timer_ok)
             self.timer_warning = self._parse_time(options.timer_warning)
             self.timer_filter = self._parse_filter(options.timer_filter)
+            self.timer_fail = options.timer_fail
             self.timer_no_color = True
             self.json_file = options.json_file
 
@@ -224,6 +229,16 @@ class TimerPlugin(Plugin):
 
         return color
 
+    @property
+    def threshold(self):
+        """Get maximum test time allowed when --timer-fail option is used."""
+        if self._threshold is None:
+            self._threshold = {
+                'error': self.timer_warning,
+                'warning': self.timer_ok,
+            }[self.timer_fail]
+        return self._threshold
+
     def _colored_time(self, time_taken, color=None):
         """Get formatted and colored string for a given time taken."""
         if self.timer_no_color:
@@ -238,13 +253,15 @@ class TimerPlugin(Plugin):
         )
 
     def _register_time(self, test, status=None):
+        time_taken = self._time_taken()
         if self.multiprocessing_enabled:
-            _results_queue.put((test.id(), self._time_taken(), None))
+            _results_queue.put((test.id(), time_taken, None))
 
         self._timed_tests[test.id()] = {
-            'time': self._time_taken(),
+            'time': time_taken,
             'status': status,
         }
+        return time_taken
 
     def addError(self, test, err, capt=None):
         """Called when a test raises an uncaught exception."""
@@ -256,7 +273,11 @@ class TimerPlugin(Plugin):
 
     def addSuccess(self, test, capt=None):
         """Called when a test passes."""
-        self._register_time(test, 'success')
+        time_taken = self._register_time(test, 'success')
+        if self.timer_fail is not None and \
+                time_taken * 1000.0 > self.threshold:
+            test.fail('Test was too slow (took {0:0.4f}s, threshold was '
+                      '{1:0.4f}s)'.format(time_taken, self.threshold / 1000.0))
 
     def prepareTestResult(self, result):
         """Called before the first test is run."""
@@ -350,4 +371,14 @@ class TimerPlugin(Plugin):
             default=None,
             dest="timer_filter",
             help="Show filtered results only (ok,warning,error).",
+        )
+
+        # timer fail
+        parser.add_option(
+            "--timer-fail",
+            action="store",
+            default=None,
+            dest="timer_fail",
+            choices=('warning', 'error'),
+            help="Fail tests that exceed a threshold (warning,error)",
         )

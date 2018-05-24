@@ -22,9 +22,9 @@ class TestTimerPlugin(unittest.TestCase):
         parser = mock.MagicMock()
         self.plugin.options(parser)
         if not plugin.IS_NT:
-            self.assertEquals(parser.add_option.call_count, 7)
+            self.assertEquals(parser.add_option.call_count, 8)
         else:
-            self.assertEquals(parser.add_option.call_count, 6)
+            self.assertEquals(parser.add_option.call_count, 7)
 
     def test_configure(self):
         attributes = ('config', 'timer_top_n')
@@ -84,3 +84,19 @@ class TestTimerPlugin(unittest.TestCase):
         self.plugin.timer_no_color = True
         self.assertEqual(self.plugin._colored_time(1), "1.0000s")
         self.assertFalse(colored_mock.called)
+
+    @parameterized.expand([
+        ('warning', 0.5, False),
+        ('warning', 1.5, True),
+        ('error', 1.5, False),
+        ('error', 2.5, True),
+    ])
+    def test_timer_fail_option_warning_pass(self, timer_fail_level, time_taken,
+                                            fail_expected):
+        self.plugin.timer_fail = timer_fail_level
+        self.plugin.multiprocessing_enabled = False
+        with mock.patch.object(self.plugin, '_time_taken') as _time_taken:
+            _time_taken.return_value = time_taken
+            self.plugin.startTest(self.test_mock)
+            self.plugin.addSuccess(self.test_mock)
+            self.assertEqual(self.test_mock.fail.called, fail_expected)
