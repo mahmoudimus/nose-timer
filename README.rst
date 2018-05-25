@@ -30,7 +30,6 @@ source frequently::
     pip install -e .
 
 
-
 Usage
 -----
 
@@ -83,6 +82,7 @@ Or to apply several filters at once::
 
     nosetests --with-timer --timer-filter warning,error
 
+
 How do I export the results ?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -104,7 +104,6 @@ in the following format::
       },
      ....
    }
-
 
 
 License
@@ -131,18 +130,18 @@ Contribute
 Contributors
 ------------
 
-- `@mahmoudimus <https://github.com/mahmoudimus>`_
-- `@fisadev <https://github.com/fisadev>`_
 - `@andresriancho <https://github.com/andresriancho>`_
-- `@e0ne <https://github.com/e0ne>`_
-- `@kevinburke <https://github.com/kevinburke>`_
+- `@cgoldberg <https://github.com/cgoldberg>`_
 - `@DmitrySandalov <https://github.com/DmitrySandalov>`_
+- `@e0ne <https://github.com/e0ne>`_
+- `@ereOn <https://github.com/ereOn>`_
+- `@fisadev <https://github.com/fisadev>`_
+- `@garbageek <https://github.com/garbageek>`_
+- `@HaraldNordgren <https://github.com/HaraldNordgren>`_
+- `@hugovk <https://github.com/hugovk>`_
+- `@jakirkham <https://github.com/jakirkham>`_
+- `@kevinburke <https://github.com/kevinburke>`_
+- `@mahmoudimus <https://github.com/mahmoudimus>`_
 - `@satyrius <https://github.com/satyrius>`_
 - `@skudriashev <https://github.com/skudriashev>`_
 - `@whodafly <https://github.com/whodafly>`_
-- `@hugovk <https://github.com/hugovk>`_
-- `@cgoldberg <https://github.com/cgoldberg>`_
-- `@ereOn <https://github.com/ereOn>`_
-- `@HaraldNordgren <https://github.com/HaraldNordgren>`_
-- `@jakirkham <https://github.com/jakirkham>`_
-- `@garbageek <https://github.com/garbageek>`_
