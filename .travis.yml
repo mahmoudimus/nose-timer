@@ -1,19 +1,19 @@
 language: python
 matrix:
   include:
-  - python: "2.7"
+  - python: 2.7
     env: TOXENV=pep8
-  - python: "pypy"
+  - python: pypy
     env: TOXENV=pypy
-  - python: "pypy3"
+  - python: pypy3
     env: TOXENV=pypy3
-  - python: "2.7"
+  - python: 2.7
     env: TOXENV=py27
-  - python: "3.4"
+  - python: 3.4
     env: TOXENV=py34
-  - python: "3.5"
+  - python: 3.5
     env: TOXENV=py35
-  - python: "3.6"
+  - python: 3.6
     env: TOXENV=py36
 install:
   - pip install tox
@@ -26,6 +26,6 @@ deploy:
   password:
     secure: OhjlsFN3zIHqW6PlpSanlHhJ3Bx6jIAPZM6jObMeA4yXp74NCdzpPBS/Drdj0dnKXj5edkzUQ4iC72Eyx5vmHvq0yHIM49FvfEliJ5oihQGgqZufqA6EjaVSvRaRh7ZERcwGKzbPpCGulh55V1bURDFOTXwk2n9X4/xmIyX3v7w=
   on:
+    python: 3.6
     tags: true
-    all_branches: true
     repo: mahmoudimus/nose-timer
