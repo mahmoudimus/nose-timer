@@ -170,8 +170,10 @@ class TimerPlugin(Plugin):
             for i in range(_results_queue.qsize()):
                 try:
                     k, v, s = _results_queue.get(False)
-                    self._timed_tests[k] = {'time': v,
-                                            'status': s}
+                    self._timed_tests[k] = {
+                        'time': v,
+                        'status': s,
+                    }
                 except Queue.Empty:
                     pass
 
@@ -226,23 +228,23 @@ class TimerPlugin(Plugin):
         """Get formatted and colored string for a given time taken."""
         if self.timer_no_color:
             return "{0:0.4f}s".format(time_taken)
+
         return _colorize("{0:0.4f}s".format(time_taken), color)
 
     def _format_report_line(self, test, time_taken, color, status, percent):
         """Format a single report line."""
         return "[{0}] {3:04.2f}% {1}: {2}".format(
-                                      status, test,
-                                      self._colored_time(time_taken, color),
-                                      percent)
+            status, test, self._colored_time(time_taken, color), percent
+        )
 
     def _register_time(self, test, status=None):
         if self.multiprocessing_enabled:
             _results_queue.put((test.id(), self._time_taken(), None))
 
         self._timed_tests[test.id()] = {
-                                        'time': self._time_taken(),
-                                        'status': status
-                                       }
+            'time': self._time_taken(),
+            'status': status,
+        }
 
     def addError(self, test, err, capt=None):
         """Called when a test raises an uncaught exception."""
@@ -281,46 +283,71 @@ class TimerPlugin(Plugin):
         super(TimerPlugin, self).options(parser, env)
 
         # timer top n
-        _help = ("When the timer plugin is enabled, only show the N tests "
-                 "that consume more time. The default, -1, shows all tests.")
-        parser.add_option("--timer-top-n", action="store", default="-1",
-                          dest="timer_top_n", help=_help)
+        parser.add_option(
+            "--timer-top-n",
+            action="store",
+            default="-1",
+            dest="timer_top_n",
+            help=(
+                "When the timer plugin is enabled, only show the N tests that "
+                "consume more time. The default, -1, shows all tests."
+            ),
+        )
 
-        _help = ("Save the results of the timing and status of each"
-                 "tests in said Json file")
-
-        parser.add_option("--timer-json-file", action="store",
-                          default=None,
-                          dest="json_file",
-                          help=_help)
+        parser.add_option(
+            "--timer-json-file",
+            action="store",
+            default=None,
+            dest="json_file",
+            help=(
+                "Save the results of the timing and status of each tests in "
+                "said Json file."
+            ),
+        )
 
         _time_units_help = ("Default time unit is a second, but you can set "
-                            "it explicitly (e.g. 1s, 500ms).")
+                            "it explicitly (e.g. 1s, 500ms)")
 
         # timer ok
-        _ok_help = ("Normal execution time. Such tests will be highlighted in "
-                    "green. {units_help}".format(units_help=_time_units_help))
-        parser.add_option("--timer-ok", action="store", default=1,
-                          dest="timer_ok", help=_ok_help)
+        parser.add_option(
+            "--timer-ok",
+            action="store",
+            default=1,
+            dest="timer_ok",
+            help=(
+                "Normal execution time. Such tests will be highlighted in "
+                "green. {units_help}.".format(units_help=_time_units_help)
+            ),
+        )
 
         # time warning
-        _warning_help = ("Warning about execution time to highlight slow "
-                         "tests in yellow. Tests which take more time will "
-                         "be highlighted in red. {units_help}".format(
-                             units_help=_time_units_help))
-        parser.add_option("--timer-warning", action="store", default=3,
-                          dest="timer_warning", help=_warning_help)
-
-        # timer no color
-        _no_color_help = "Don't colorize output (useful for non-tty output)."
+        parser.add_option(
+            "--timer-warning",
+            action="store",
+            default=3,
+            dest="timer_warning",
+            help=(
+                "Warning about execution time to highlight slow tests in "
+                "yellow. Tests which take more time will be highlighted in "
+                "red. {units_help}.".format(units_help=_time_units_help)
+            ),
+        )
 
         # Windows + nosetests does not support colors (even with colorama).
         if not IS_NT:
-            parser.add_option("--timer-no-color", action="store_true",
-                              default=False, dest="timer_no_color",
-                              help=_no_color_help)
+            parser.add_option(
+                "--timer-no-color",
+                action="store_true",
+                default=False,
+                dest="timer_no_color",
+                help="Don't colorize output (useful for non-tty output).",
+            )
 
         # timer filter
-        _filter_help = "Show filtered results only (ok,warning,error)"
-        parser.add_option("--timer-filter", action="store", default=None,
-                          dest="timer_filter", help=_filter_help)
+        parser.add_option(
+            "--timer-filter",
+            action="store",
+            default=None,
+            dest="timer_filter",
+            help="Show filtered results only (ok,warning,error).",
+        )
