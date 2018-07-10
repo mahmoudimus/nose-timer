@@ -10,6 +10,7 @@ setup(
     description='A timer plugin for nosetests',
     long_description=open('README.rst').read(),
     author=', '.join([
+        'Alister Cordiner',
         'Andres Riancho',
         'Anton Egorov',
         'Arthur Kulik',

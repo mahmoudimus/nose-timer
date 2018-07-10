@@ -82,6 +82,21 @@ Or to apply several filters at once::
 
     nosetests --with-timer --timer-filter warning,error
 
+How do I cause slow tests to fail?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can cause any tests that exceed a threshold to fail by specifying the
+``--timer-fail`` option:
+
+- If you specify ``--timer-fail warning``, slow tests which would be displayed
+  as a warning (i.e. that take more time than  ``--timer-ok``) will fail.
+- If you specify ``--timer-fail error``, slow tests which would be displayed as
+  an error (i.e. that take more time than ``--timer-warning``) will fail.
+
+For example, to fail any tests that take more than 5 seconds::
+
+    nosetests --with-timer --timer-warning 5.0 --timer-fail error
+
 
 How do I export the results ?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -130,6 +145,7 @@ Contribute
 Contributors
 ------------
 
+- `@acordiner <https://github.com/acordiner>`_
 - `@andresriancho <https://github.com/andresriancho>`_
 - `@cgoldberg <https://github.com/cgoldberg>`_
 - `@DmitrySandalov <https://github.com/DmitrySandalov>`_
