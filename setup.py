@@ -1,14 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import re
+
 from setuptools import setup
 
+with open('README.rst') as f:
+    long_description = f.read()
+
+with open('nosetimer/__init__.py') as f:
+    version = re.search(r'__version__ = \'(.*?)\'', f.read()).group(1)
 
 setup(
     name='nose-timer',
-    version='0.7.4',
+    version=version,
     description='A timer plugin for nosetests',
-    long_description=open('README.rst').read(),
+    long_description=long_description,
     author=', '.join([
         'Alister Cordiner',
         'Andres Riancho',
