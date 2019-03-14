@@ -65,9 +65,9 @@ class TestTimerPlugin(unittest.TestCase):
         parser = mock.MagicMock()
         self.plugin.options(parser)
         if not plugin.IS_NT:
-            self.assertEquals(parser.add_option.call_count, 8)
+            self.assertEqual(parser.add_option.call_count, 8)
         else:
-            self.assertEquals(parser.add_option.call_count, 7)
+            self.assertEqual(parser.add_option.call_count, 7)
 
     def test_configure(self):
         attributes = ('config', 'timer_top_n')
@@ -80,7 +80,7 @@ class TestTimerPlugin(unittest.TestCase):
 
     def test_time_taken(self):
         self.assertFalse(hasattr(self.plugin, '_timer'))
-        self.assertEquals(self.plugin._time_taken(), 0.0)
+        self.assertEqual(self.plugin._time_taken(), 0.0)
 
         self.plugin.startTest(self.test_mock)
         self.assertTrue(hasattr(self.plugin, '_timer'))
