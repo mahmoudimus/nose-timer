@@ -13,10 +13,53 @@ class TestTimerPlugin(unittest.TestCase):
         self.plugin.enabled = True
         self.plugin.timer_ok = 1000
         self.plugin.timer_warning = 2000
+        self.plugin.timer_fail = None
         self.plugin.timer_no_color = False
+        self.plugin.multiprocessing_enabled = False
         self.test_mock = mock.MagicMock(name='test')
         self.test_mock.id.return_value = 1
         self.opts_mock = mock.MagicMock(name='opts')
+
+    def test_add_error(self):
+        self.plugin.addError(self.test_mock, None)
+
+        self.assertEqual(
+            self.plugin._timed_tests,
+            {
+                1: {
+                    'status': 'error',
+                    'time': 0.0,
+                },
+            },
+        )
+
+    def test_add_failure(self):
+        self.plugin.addFailure(self.test_mock, None)
+
+        self.assertEqual(
+            self.plugin._timed_tests,
+            {
+                1: {
+                    'status': 'fail',
+                    'time': 0.0,
+                },
+            },
+        )
+
+    def test_add_success(self):
+        self.plugin.multiprocessing_enabled = True
+        self.plugin.addSuccess(self.test_mock, None)
+
+        self.assertEqual(
+            self.plugin._timed_tests,
+            {
+                1: {
+                    'status': 'success',
+                    'time': 0.0,
+                },
+            },
+        )
+        self.assertEqual(plugin._results_queue.get(), (1, 0.0, 'success'))
 
     def test_options(self):
         parser = mock.MagicMock()

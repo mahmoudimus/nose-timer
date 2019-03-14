@@ -158,8 +158,9 @@ class TimerPlugin(Plugin):
                 self.timer_no_color = options.timer_no_color
 
             # determine if multiprocessing plugin enabled
-            self.multiprocessing_enabled = \
+            self.multiprocessing_enabled = (
                 bool(getattr(options, 'multiprocess_workers', False))
+            )
 
     def startTest(self, test):
         """Initializes a timer before starting a test."""
@@ -255,7 +256,7 @@ class TimerPlugin(Plugin):
     def _register_time(self, test, status=None):
         time_taken = self._time_taken()
         if self.multiprocessing_enabled:
-            _results_queue.put((test.id(), time_taken, None))
+            _results_queue.put((test.id(), time_taken, status))
 
         self._timed_tests[test.id()] = {
             'time': time_taken,
