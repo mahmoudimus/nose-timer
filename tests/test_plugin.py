@@ -2,7 +2,7 @@ import mock
 import unittest
 
 from nosetimer import plugin
-from nose_parameterized import parameterized
+from parameterized import parameterized
 
 
 class TestTimerPlugin(unittest.TestCase):
