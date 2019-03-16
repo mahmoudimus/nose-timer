@@ -121,15 +121,13 @@ class TimerPlugin(Plugin):
         Raises the ``ValueError`` for invalid format.
         """
         try:
-            # Default time unit is a second, we should convert it to
-            # milliseconds.
+            # Default time unit is a second, we should convert it to milliseconds.
             return int(value) * 1000
         except ValueError:
             # Try to parse if we are unlucky to cast value into int.
             m = self.time_format.match(value)
             if not m:
-                raise ValueError("Could not parse time represented by "
-                                 "'{t}'".format(t=value))
+                raise ValueError("Could not parse time represented by '{t}'".format(t=value))
             time = int(m.group('time'))
             if m.group('units') != 'ms':
                 time *= 1000
@@ -158,9 +156,7 @@ class TimerPlugin(Plugin):
                 self.timer_no_color = options.timer_no_color
 
             # determine if multiprocessing plugin enabled
-            self.multiprocessing_enabled = (
-                bool(getattr(options, 'multiprocess_workers', False))
-            )
+            self.multiprocessing_enabled = bool(getattr(options, 'multiprocess_workers', False))
 
     def startTest(self, test):
         """Initializes a timer before starting a test."""
@@ -183,9 +179,7 @@ class TimerPlugin(Plugin):
                 except Queue.Empty:
                     pass
 
-        d = sorted(self._timed_tests.items(),
-                   key=lambda item: item[1]['time'],
-                   reverse=True)
+        d = sorted(self._timed_tests.items(), key=lambda item: item[1]['time'], reverse=True)
 
         if self.json_file:
             dict_type = OrderedDict if self.timer_top_n else dict
@@ -199,15 +193,16 @@ class TimerPlugin(Plugin):
             status = time_and_status['status']
             if i < self.timer_top_n or self.timer_top_n == -1:
                 color = self._get_result_color(time_taken)
-                percent = 0 if total_time == 0 else time_taken/total_time*100
-                line = self._format_report_line(test,
-                                                time_taken,
-                                                color,
-                                                status,
-                                                percent)
+                percent = 0 if total_time == 0 else time_taken / total_time * 100
+                line = self._format_report_line(
+                    test=test,
+                    time_taken=time_taken,
+                    color=color,
+                    status=status,
+                    percent=percent,
+                )
                 _filter = self._color_to_filter(color)
-                if (self.timer_filter is None or _filter is None or
-                        _filter in self.timer_filter):
+                if self.timer_filter is None or _filter is None or _filter in self.timer_filter:
                     stream.writeln(line)
 
     def _color_to_filter(self, color):
@@ -275,8 +270,7 @@ class TimerPlugin(Plugin):
     def addSuccess(self, test, capt=None):
         """Called when a test passes."""
         time_taken = self._register_time(test, 'success')
-        if self.timer_fail is not None and \
-                time_taken * 1000.0 > self.threshold:
+        if self.timer_fail is not None and time_taken * 1000.0 > self.threshold:
             test.fail('Test was too slow (took {0:0.4f}s, threshold was '
                       '{1:0.4f}s)'.format(time_taken, self.threshold / 1000.0))
 
@@ -289,8 +283,7 @@ class TimerPlugin(Plugin):
                 time_taken = self._timed_tests.get(test.id())['time']
                 if time_taken is not None:
                     color = self._get_result_color(time_taken)
-                    output += ' ({0})'.format(self._colored_time(time_taken,
-                                                                 color))
+                    output += ' ({0})'.format(self._colored_time(time_taken, color))
                 result.stream.writeln(output)
             elif result.dots:
                 result.stream.write('.')
