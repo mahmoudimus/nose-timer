@@ -16,7 +16,7 @@ from collections import OrderedDict
 try:
     import termcolor
 except ImportError:
-    termcolor = None
+    termcolor = None  # noqa
 
 try:
     import colorama
@@ -101,6 +101,12 @@ class TimerPlugin(Plugin):
 
     time_format = re.compile(r'^(?P<time>\d+)(?P<units>s|ms)?$')
     _timed_tests = {}
+
+    _COLOR_TO_FILTER = {
+        'green': 'ok',
+        'yellow': 'warning',
+        'red': 'error',
+    }
 
     def __init__(self, *args, **kwargs):
         super(TimerPlugin, self).__init__(*args, **kwargs)
@@ -201,17 +207,9 @@ class TimerPlugin(Plugin):
                     status=status,
                     percent=percent,
                 )
-                _filter = self._color_to_filter(color)
+                _filter = self._COLOR_TO_FILTER.get(color)
                 if self.timer_filter is None or _filter is None or _filter in self.timer_filter:
                     stream.writeln(line)
-
-    def _color_to_filter(self, color):
-        """Get filter name by a given color."""
-        return {
-            'green': 'ok',
-            'yellow': 'warning',
-            'red': 'error',
-        }.get(color)
 
     def _get_result_color(self, time_taken):
         """Get time taken result color."""

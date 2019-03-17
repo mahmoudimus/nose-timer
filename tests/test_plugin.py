@@ -20,6 +20,25 @@ class TestTimerPlugin(unittest.TestCase):
         self.test_mock.id.return_value = 1
         self.opts_mock = mock.MagicMock(name='opts')
 
+    @parameterized.expand([
+        (1.00, 'green'),
+        (1.01, 'yellow'),
+        (2.01, 'red'),
+    ])
+    def test_get_result_color(self, time_taken, color):
+        self.assertEqual(self.plugin._get_result_color(time_taken=time_taken), color)
+
+    @parameterized.expand([
+        ('green', '\x1b[32m1.0000s\x1b[0m'),
+        ('yellow', '\x1b[33m1.0000s\x1b[0m'),
+        ('red', '\x1b[31m1.0000s\x1b[0m'),
+    ])
+    def test_format_report_line(self, color, expected):
+        self.assertEqual(
+            self.plugin._format_report_line(self.test_mock, 1, color, 'error', 0.1),
+            "[error] 0.10%% %s: %s" % (self.test_mock, expected),
+        )
+
     def test_add_error(self):
         self.plugin.addError(self.test_mock, None)
 
