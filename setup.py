@@ -32,7 +32,9 @@ setup(
         'Stanislav Kudriashev',
     ]),
     url='https://github.com/mahmoudimus/nose-timer',
-    packages=['nosetimer', ],
+    packages=[
+        'nosetimer',
+    ],
     install_requires=[
         'nose',
     ],
@@ -40,7 +42,7 @@ setup(
     entry_points={
         'nose.plugins.0.10': [
             'nosetimer = nosetimer.plugin:TimerPlugin',
-        ]
+        ],
     },
     classifiers=[
         'Development Status :: 5 - Production/Stable',
