@@ -43,11 +43,12 @@ setup(
         ]
     },
     classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Environment :: Console',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Operating System :: OS Independent',
-        'Programming Language :: Python',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
@@ -55,7 +56,7 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
+        'Programming Language :: Python',
         'Topic :: Software Development :: Testing',
-        'Environment :: Console',
     ],
 )
