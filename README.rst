@@ -3,10 +3,10 @@ nose-timer
 
 A timer plugin for nosetests that answers the question: *how much time does every test take?*
 
-.. image:: https://badge.fury.io/py/nose-timer.png
+.. image:: https://badge.fury.io/py/nose-timer.svg
     :target: https://badge.fury.io/py/nose-timer
 
-.. image:: https://travis-ci.org/mahmoudimus/nose-timer.png?branch=master
+.. image:: https://travis-ci.org/mahmoudimus/nose-timer.svg?branch=master
    :target: https://travis-ci.org/mahmoudimus/nose-timer
 
 
