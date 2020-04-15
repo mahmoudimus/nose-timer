@@ -20,9 +20,8 @@ script:
   - tox
 deploy:
   provider: pypi
-  user: "__token__"
-  password:
-    secure: $PYPI_KEY_NOSE_TIMER
+  username: "__token__"
+  password: $PYPI_KEY_NOSE_TIMER
   on:
     python: 3.8
     tags: true
