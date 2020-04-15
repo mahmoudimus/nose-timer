@@ -20,9 +20,9 @@ script:
   - tox
 deploy:
   provider: pypi
-  user: Mahmoud.Abdelkader
+  user: "__token__"
   password:
-    secure: OhjlsFN3zIHqW6PlpSanlHhJ3Bx6jIAPZM6jObMeA4yXp74NCdzpPBS/Drdj0dnKXj5edkzUQ4iC72Eyx5vmHvq0yHIM49FvfEliJ5oihQGgqZufqA6EjaVSvRaRh7ZERcwGKzbPpCGulh55V1bURDFOTXwk2n9X4/xmIyX3v7w=
+    secure: $PYPI_KEY_NOSE_TIMER
   on:
     python: 3.8
     tags: true
