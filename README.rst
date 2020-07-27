@@ -164,3 +164,4 @@ Contributors
 - `@satyrius <https://github.com/satyrius>`_
 - `@skudriashev <https://github.com/skudriashev>`_
 - `@whodafly <https://github.com/whodafly>`_
+- `@yarikoptic <https://github.com/yarikoptic>`_
