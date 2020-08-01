@@ -99,7 +99,7 @@ class TimerPlugin(Plugin):
     name = 'timer'
     score = 1
 
-    time_format = re.compile(r'^(?P<time>\d+)(?P<units>s|ms)?$')
+    time_format = re.compile(r'^(?P<time>\d+\.?\d*)(?P<units>s|ms)?$')
     _timed_tests = {}
 
     _COLOR_TO_FILTER = {
@@ -128,13 +128,13 @@ class TimerPlugin(Plugin):
         """
         try:
             # Default time unit is a second, we should convert it to milliseconds.
-            return int(value) * 1000
+            return float(value) * 1000
         except ValueError:
             # Try to parse if we are unlucky to cast value into int.
             m = self.time_format.match(value)
             if not m:
                 raise ValueError("Could not parse time represented by '{t}'".format(t=value))
-            time = int(m.group('time'))
+            time = float(m.group('time'))
             if m.group('units') != 'ms':
                 time *= 1000
             return time
