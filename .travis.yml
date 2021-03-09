@@ -9,6 +9,8 @@ matrix:
     env: TOXENV=py37
   - python: 3.8
     env: TOXENV=py38
+  - python: 3.9
+    env: TOXENV=py39
   - python: pypy
     env: TOXENV=pypy
   - python: pypy3
@@ -23,6 +25,6 @@ deploy:
   username: "__token__"
   password: $PYPI_KEY_NOSE_TIMER
   on:
-    python: 3.8
+    python: 3.9
     tags: true
     repo: mahmoudimus/nose-timer
