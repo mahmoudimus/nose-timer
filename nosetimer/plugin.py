@@ -8,19 +8,19 @@ from nose.plugins import Plugin
 
 try:
     import Queue
-except ImportError:
+except ImportError:  # pragma: no cover
     import queue as Queue
 
 from collections import OrderedDict
 
 try:
     import termcolor
-except ImportError:
+except ImportError:  # pragma: no cover
     termcolor = None  # noqa
 
 try:
     import colorama
-    TERMCOLOR2COLORAMA = {
+    TERMCOLOR2COLORAMA = {  # pragma: no cover
         'green': colorama.Fore.GREEN,
         'yellow': colorama.Fore.YELLOW,
         'red': colorama.Fore.RED,
@@ -70,10 +70,6 @@ if not IS_NT:
             """Reliable implementation of multiprocessing.Queue.qsize()."""
             return self.size.value
 
-        def empty(self):
-            """Reliable implementation of multiprocessing.Queue.empty()."""
-            return not self.qsize()
-
     _results_queue = TimerQueue()
 
 
@@ -88,7 +84,7 @@ def _colorize(val, color):
     if termcolor is not None:
         val = termcolor.colored(val, color)
     elif colorama is not None:
-        val = TERMCOLOR2COLORAMA[color] + val + colorama.Style.RESET_ALL
+        val = "{}{}{}".format(TERMCOLOR2COLORAMA[color], val, colorama.Style.RESET_ALL)
 
     return val
 
@@ -154,12 +150,10 @@ class TimerPlugin(Plugin):
             self.timer_warning = self._parse_time(options.timer_warning)
             self.timer_filter = self._parse_filter(options.timer_filter)
             self.timer_fail = options.timer_fail
-            self.timer_no_color = True
-            self.json_file = options.json_file
 
             # Windows + nosetests does not support colors (even with colorama).
-            if not IS_NT:
-                self.timer_no_color = options.timer_no_color
+            self.timer_no_color = options.timer_no_color if not IS_NT else True
+            self.json_file = options.json_file
 
             # determine if multiprocessing plugin enabled
             self.multiprocessing_enabled = bool(getattr(options, 'multiprocess_workers', False))
@@ -235,10 +229,8 @@ class TimerPlugin(Plugin):
 
     def _colored_time(self, time_taken, color=None):
         """Get formatted and colored string for a given time taken."""
-        if self.timer_no_color:
-            return "{0:0.4f}s".format(time_taken)
-
-        return _colorize("{0:0.4f}s".format(time_taken), color)
+        val = "{0:0.4f}s".format(time_taken)
+        return val if self.timer_no_color or color is None else _colorize(val, color)
 
     def _format_report_line(self, test, time_taken, color, status, percent):
         """Format a single report line."""
