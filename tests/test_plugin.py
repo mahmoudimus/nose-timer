@@ -202,7 +202,7 @@ class TestTimerPlugin(unittest.TestCase):
 
         self.plugin.startTest(self.test_mock)
         self.assertTrue(hasattr(self.plugin, '_timer'))
-        self.assertNotEquals(self.plugin._time_taken(), 0.0)
+        self.assertNotEqual(self.plugin._time_taken(), 0.0)
 
     @parameterized.expand([
         ('1', 1000),  # seconds by default
