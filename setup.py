@@ -9,7 +9,7 @@ with open('README.rst') as f:
     long_description = f.read()
 
 with open('nosetimer/__init__.py') as f:
-    version = re.search(r'__version__ = \'(.*?)\'', f.read()).group(1)
+    version = re.search(r'__version__ = \'(.*?)\'', f.read())[1]
 
 setup(
     name='nose-timer',

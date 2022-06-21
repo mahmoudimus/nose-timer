@@ -251,7 +251,7 @@ class TestTimerPlugin(unittest.TestCase):
 
         self.assertEqual(
             res,
-            "{}1.0000s{}".format(colorama_mock.Fore.GREEN, colorama_mock.Style.RESET_ALL),
+            f"{colorama_mock.Fore.GREEN}1.0000s{colorama_mock.Style.RESET_ALL}",
         )
 
     @mock.patch("nosetimer.plugin._colorize")

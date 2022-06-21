@@ -84,7 +84,7 @@ def _colorize(val, color):
     if termcolor is not None:
         val = termcolor.colored(val, color)
     elif colorama is not None:
-        val = "{}{}{}".format(TERMCOLOR2COLORAMA[color], val, colorama.Style.RESET_ALL)
+        val = f"{TERMCOLOR2COLORAMA[color]}{val}{colorama.Style.RESET_ALL}"
 
     return val
 
@@ -109,14 +109,7 @@ class TimerPlugin(Plugin):
         self._threshold = None
 
     def _time_taken(self):
-        if hasattr(self, '_timer'):
-            taken = timeit.default_timer() - self._timer
-        else:
-            # Test died before it ran (probably error in setup()) or
-            # success/failure added before test started probably due to custom
-            # `TestResult` munging.
-            taken = 0.0
-        return taken
+        return timeit.default_timer() - self._timer if hasattr(self, '_timer') else 0.0
 
     def _parse_time(self, value):
         """Parse string time representation to get number of milliseconds.
@@ -152,11 +145,11 @@ class TimerPlugin(Plugin):
             self.timer_fail = options.timer_fail
 
             # Windows + nosetests does not support colors (even with colorama).
-            self.timer_no_color = options.timer_no_color if not IS_NT else True
+            self.timer_no_color = True if IS_NT else options.timer_no_color
             self.json_file = options.json_file
 
             # determine if multiprocessing plugin enabled
-            self.multiprocessing_enabled = bool(getattr(options, 'multiprocess_workers', False))
+            self.multiprocessing_enabled = getattr(options, 'multiprocess_workers', False)
 
     def startTest(self, test):
         """Initializes a timer before starting a test."""
@@ -169,7 +162,7 @@ class TimerPlugin(Plugin):
 
         # if multiprocessing plugin enabled - get items from results queue
         if self.multiprocessing_enabled:
-            for i in range(_results_queue.qsize()):
+            for _ in range(_results_queue.qsize()):
                 try:
                     k, v, s = _results_queue.get(False)
                     self._timed_tests[k] = {
@@ -186,14 +179,14 @@ class TimerPlugin(Plugin):
             with open(self.json_file, 'w') as f:
                 json.dump({'tests': dict_type((k, v) for k, v in d)}, f)
 
-        total_time = sum([vv['time'] for kk, vv in d])
+        total_time = sum(vv['time'] for kk, vv in d)
 
         for i, (test, time_and_status) in enumerate(d):
-            time_taken = time_and_status['time']
-            status = time_and_status['status']
             if i < self.timer_top_n or self.timer_top_n == -1:
+                time_taken = time_and_status['time']
                 color = self._get_result_color(time_taken)
                 percent = 0 if total_time == 0 else time_taken / total_time * 100
+                status = time_and_status['status']
                 line = self._format_report_line(
                     test=test,
                     time_taken=time_taken,
@@ -209,13 +202,11 @@ class TimerPlugin(Plugin):
         """Get time taken result color."""
         time_taken_ms = time_taken * 1000
         if time_taken_ms <= self.timer_ok:
-            color = 'green'
+            return 'green'
         elif time_taken_ms <= self.timer_warning:
-            color = 'yellow'
+            return 'yellow'
         else:
-            color = 'red'
-
-        return color
+            return 'red'
 
     @property
     def threshold(self):
